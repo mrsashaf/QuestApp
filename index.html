@@ -2,371 +2,303 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quest Board — Сезон Весна 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Quest Board — Весна 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg-page:      #0a0a0f;
-  --bg-panel:     #13131a;
-  --bg-card:      #1a1a24;
-  --bg-card-h:    #1e1e2c;
-  --border:       #2a2d3a;
-  --border-l:     #363a50;
-  --text-main:    #f0f1f6;
-  --text-muted:   #8b8fa8;
-  --text-dim:     #50546a;
-  --btn-bg:       #1e1e2a;
-  --btn-h:        #26263a;
-  --btn-bdr:      #333648;
-  --accent:       #6366f1;
-  --danger:       #ef4444;
-  --success:      #22c55e;
-  --gold:         #FBBF24;
-
-  --c-craft:  #E94560;
-  --c-body:   #4ADE80;
-  --c-circle: #FBBF24;
-  --c-fun:    #A78BFA;
-  --c-growth: #60A5FA;
-
-  --mono: 'JetBrains Mono', 'Consolas', monospace;
-  --sans: 'Inter', system-ui, sans-serif;
-  --r: 8px; --rs: 5px;
+:root{
+  --bg:#0a0a0f; --pan:#13131a; --card:#1a1a24; --card-h:#1e1e2c;
+  --bdr:#2a2d3a; --bdr-l:#363a50; --txt:#f0f1f6; --muted:#8b8fa8; --dim:#50546a;
+  --bbg:#1e1e2a; --bh:#26263a; --bbdr:#333648;
+  --accent:#6366f1; --danger:#ef4444; --ok:#22c55e; --gold:#FBBF24;
+  --r:8px; --rs:5px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--bg-page);color:var(--text-main);font-family:var(--sans);font-size:14px;line-height:1.5;min-height:100vh}
+html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--txt);font-family:'Inter',system-ui,sans-serif;
+  font-size:14px;line-height:1.5;min-height:100vh;overscroll-behavior:none}
 
-/* ── LAYOUT ── */
-#app{max-width:1440px;margin:0 auto;padding:24px 20px 80px}
-section{margin-bottom:36px}
+#app{max-width:1440px;margin:0 auto;padding:16px 14px 80px}
+section{margin-bottom:30px}
+.stitle{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
+  letter-spacing:2.5px;text-transform:uppercase;color:var(--dim);
+  margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.stitle::after{content:'';flex:1;height:1px;background:var(--bdr)}
 
-.sec-title{
-  font-family:var(--mono);font-size:10px;font-weight:700;
-  letter-spacing:2.5px;text-transform:uppercase;color:var(--text-dim);
-  margin-bottom:14px;display:flex;align-items:center;gap:10px
+/* ── SYNC STATUS BAR ── */
+#sbar{
+  display:flex;align-items:center;gap:8px;padding:7px 12px;
+  background:var(--pan);border:1px solid var(--bdr);border-radius:var(--r);
+  margin-bottom:14px;flex-wrap:wrap
 }
-.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.sbar-status{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);flex:1;min-width:100px}
+.sbar-status.ok{color:var(--ok)} .sbar-status.busy{color:var(--gold)} .sbar-status.err{color:var(--danger)}
+.sbar-btns{display:flex;gap:5px;flex-shrink:0}
 
 /* ── HEADER ── */
-#header{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
-.hdr-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap}
-.hdr-left{flex:1;min-width:200px}
+#header{margin-bottom:24px;padding-bottom:18px;border-bottom:1px solid var(--bdr)}
+.hdr-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.hdr-left{flex:1;min-width:160px}
+#sn{font-family:'JetBrains Mono',monospace;font-size:clamp(17px,4vw,31px);font-weight:700;
+  letter-spacing:-.5px;cursor:pointer;display:inline-block;line-height:1.1;transition:color .15s}
+#sn:hover{color:var(--accent)}
+#ssub{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:5px;letter-spacing:1px}
+.hdr-right{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 
-#season-name{
-  font-family:var(--mono);font-size:clamp(20px,4vw,34px);font-weight:700;
-  letter-spacing:-0.5px;cursor:pointer;display:inline-block;line-height:1.1;
-  transition:color .15s
-}
-#season-name:hover{color:var(--accent)}
-#season-subtitle{font-family:var(--mono);font-size:11px;color:var(--text-muted);margin-top:6px;letter-spacing:1px}
-
-.hdr-right{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
-
-/* undo/redo */
-.ud-group{display:flex;gap:3px;align-items:center;background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--rs);padding:2px 4px}
-.ud-btn{background:none;border:none;color:var(--text-muted);cursor:pointer;
-  font-family:var(--mono);font-size:13px;width:28px;height:26px;border-radius:4px;
-  display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s}
-.ud-btn:hover:not(:disabled){background:var(--btn-h);color:var(--text-main)}
-.ud-btn:disabled{opacity:.25;cursor:default}
+.ud{display:flex;gap:2px;background:var(--pan);border:1px solid var(--bdr);border-radius:var(--rs);padding:2px 3px}
+.ub{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;
+  width:28px;height:26px;border-radius:4px;display:flex;align-items:center;justify-content:center;transition:background .12s,color .12s}
+.ub:hover:not(:disabled){background:var(--bh);color:var(--txt)} .ub:disabled{opacity:.22;cursor:default}
 
 /* ── BUTTONS ── */
-.btn{
-  display:inline-flex;align-items:center;gap:6px;padding:7px 13px;
-  background:var(--btn-bg);border:1px solid var(--btn-bdr);color:var(--text-main);
-  font-family:var(--sans);font-size:12px;font-weight:500;border-radius:var(--rs);
-  cursor:pointer;transition:background .15s,border-color .15s;white-space:nowrap
-}
-.btn:hover{background:var(--btn-h);border-color:var(--border-l)}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;
+  background:var(--bbg);border:1px solid var(--bbdr);color:var(--txt);
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:500;border-radius:var(--rs);
+  cursor:pointer;transition:background .12s;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.btn:hover,.btn:active{background:var(--bh);border-color:var(--bdr-l)}
 .btn.ac{background:var(--accent);border-color:var(--accent);color:#fff}
-.btn.ac:hover{background:#5254d4;border-color:#5254d4}
+.btn.ac:hover,.btn.ac:active{background:#5254d4}
 .btn.dn{background:transparent;border-color:var(--danger);color:var(--danger)}
-.btn.dn:hover{background:rgba(239,68,68,.1)}
-.btn.ok{background:transparent;border-color:var(--success);color:var(--success)}
-.btn.ok:hover{background:rgba(34,197,94,.1)}
-.btn.sm{padding:4px 9px;font-size:11px}
+.btn.dn:hover,.btn.dn:active{background:rgba(239,68,68,.1)}
+.btn.ok{background:transparent;border-color:var(--ok);color:var(--ok)}
+.btn.ok:hover,.btn.ok:active{background:rgba(34,197,94,.1)}
+.btn.sm{padding:4px 8px;font-size:11px}
+.btn.ghost{background:none;border-color:transparent;color:var(--muted)}
+.btn.ghost:hover{background:var(--bbg);border-color:var(--bbdr)}
 
 /* ── OATH ── */
-.oath-hdr{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:12px 16px;background:var(--bg-panel);border:1px solid var(--border);
-  border-radius:var(--r);cursor:pointer;transition:background .15s
-}
-.oath-hdr:hover{background:var(--bg-card)}
+.oath-hdr{display:flex;align-items:center;justify-content:space-between;
+  padding:11px 14px;background:var(--pan);border:1px solid var(--bdr);
+  border-radius:var(--r);cursor:pointer;transition:background .12s}
+.oath-hdr:hover{background:var(--card)}
 .oath-row{display:flex;align-items:center;gap:10px}
-.oath-arrow{font-family:var(--mono);font-size:10px;color:var(--text-muted);transition:transform .2s;display:inline-block}
-.oath-arrow.o{transform:rotate(90deg)}
-.oath-lbl{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim)}
-
-#oath-body{display:none;padding:16px;background:var(--bg-panel);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--r) var(--r)}
+.oath-arr{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);transition:transform .2s;display:inline-block}
+.oath-arr.o{transform:rotate(90deg)}
+.oath-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim)}
+#oath-body{display:none;padding:14px;background:var(--pan);border:1px solid var(--bdr);border-top:none;border-radius:0 0 var(--r) var(--r)}
 #oath-body.o{display:block}
-.oath-list{list-style:none;counter-reset:oath;display:flex;flex-direction:column;gap:10px}
-.oath-item{display:flex;gap:12px;align-items:flex-start;counter-increment:oath;color:var(--text-muted);font-size:13px;line-height:1.6}
-.oath-item::before{
-  content:counter(oath);font-family:var(--mono);font-size:10px;font-weight:700;color:var(--accent);
+.oath-list{list-style:none;counter-reset:o;display:flex;flex-direction:column;gap:9px}
+.oath-item{display:flex;gap:12px;align-items:flex-start;counter-increment:o;color:var(--muted);font-size:13px;line-height:1.6}
+.oath-item::before{content:counter(o);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--accent);
   background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);border-radius:4px;
-  width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px
-}
+  width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
 
 /* ── XP ── */
-.xp-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.xp-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
 @media(max-width:900px){.xp-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:500px){.xp-grid{grid-template-columns:1fr}}
-.xp-card{background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px}
-.xp-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.xp-name{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
-.xp-lv{font-family:var(--mono);font-size:10px;color:var(--text-muted)}
-.xp-track{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:6px}
+@media(max-width:480px){.xp-grid{grid-template-columns:1fr}}
+.xp-card{background:var(--pan);border:1px solid var(--bdr);border-radius:var(--r);padding:12px 14px}
+.xp-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.xp-name{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.xp-lv{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)}
+.xp-track{height:4px;background:var(--bdr);border-radius:2px;overflow:hidden;margin-bottom:5px}
 .xp-fill{height:100%;border-radius:2px;transition:width .4s ease}
-.xp-txt{font-family:var(--mono);font-size:10px;color:var(--text-dim)}
+.xp-txt{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim)}
 
-/* ════════════════════════════════════
-   ЗОНА ФОКУСА — выразительный стиль
-   ════════════════════════════════════ */
-#focus-section{
-  position:relative;
-  border-radius:12px;
-  padding:20px;
-  background:
-    linear-gradient(135deg,rgba(99,102,241,.06) 0%,rgba(251,191,36,.04) 100%),
-    var(--bg-panel);
+/* ── FOCUS ZONE ── */
+#focus-sec{position:relative;border-radius:12px;padding:18px;
+  background:linear-gradient(135deg,rgba(99,102,241,.06),rgba(251,191,36,.04)),var(--pan);
   border:1px solid rgba(251,191,36,.25);
-  box-shadow:0 0 0 1px rgba(251,191,36,.08),inset 0 1px 0 rgba(255,255,255,.03);
-  margin-bottom:36px;
-  transition:border-color .2s,box-shadow .2s
-}
-#focus-section.drag-active{
-  border-color:rgba(251,191,36,.6);
-  box-shadow:0 0 20px rgba(251,191,36,.15),0 0 0 1px rgba(251,191,36,.2)
-}
-
-.focus-hdr{
-  display:flex;align-items:center;gap:12px;margin-bottom:16px
-}
-.focus-icon{font-size:16px;filter:drop-shadow(0 0 6px rgba(251,191,36,.6))}
-.focus-label{
-  font-family:var(--mono);font-size:11px;font-weight:700;
-  letter-spacing:3px;text-transform:uppercase;
-  color:var(--gold);text-shadow:0 0 12px rgba(251,191,36,.4)
-}
-.focus-count{
-  font-family:var(--mono);font-size:10px;color:var(--text-dim);
-  background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.15);
-  padding:2px 8px;border-radius:20px
-}
-.focus-hint{margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:1px}
-
-.focus-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:12px;
-  min-height:96px;
-}
-.focus-drop-zone{
-  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 0 1px rgba(251,191,36,.06),inset 0 1px 0 rgba(255,255,255,.03);
+  margin-bottom:30px;transition:border-color .2s,box-shadow .2s}
+#focus-sec.drag-hot{border-color:rgba(251,191,36,.65);box-shadow:0 0 24px rgba(251,191,36,.18),0 0 0 1px rgba(251,191,36,.2)}
+.focus-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.focus-icon{font-size:15px;filter:drop-shadow(0 0 7px rgba(251,191,36,.65))}
+.focus-lbl{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;color:var(--gold);text-shadow:0 0 14px rgba(251,191,36,.4)}
+.focus-cnt{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);
+  background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.15);padding:2px 8px;border-radius:20px}
+.focus-hint{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:1px}
+@media(max-width:600px){.focus-hint{display:none}}
+.focus-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;min-height:86px}
+.focus-empty{display:flex;align-items:center;justify-content:center;
   border:2px dashed rgba(251,191,36,.2);border-radius:var(--r);
-  color:var(--text-dim);font-family:var(--mono);font-size:10px;letter-spacing:1px;
-  padding:28px;transition:border-color .2s,color .2s;min-height:96px
-}
-.focus-drop-zone.hot{border-color:rgba(251,191,36,.55);color:var(--gold)}
+  color:var(--dim);font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:1px;padding:24px;min-height:86px;transition:border-color .2s,color .2s;text-align:center}
+.focus-empty.hot{border-color:rgba(251,191,36,.55);color:var(--gold)}
 
-/* Карточка В ФОКУСЕ — увеличенный вариант */
-.ach-card{
-  background:var(--bg-card);border:1px solid var(--border);border-left:3px solid transparent;
-  border-radius:var(--r);padding:12px 14px;cursor:pointer;
-  transition:background .15s,transform .1s,box-shadow .15s;position:relative;user-select:none
-}
-.ach-card:hover{background:var(--bg-card-h);transform:translateY(-1px)}
-.ach-card.dragging{opacity:.35;transform:scale(.97)}
+/* ── ACH CARD ── */
+.ach-card{background:var(--card);border:1px solid var(--bdr);border-left:3px solid transparent;
+  border-radius:var(--r);padding:11px 13px;cursor:pointer;
+  transition:background .12s,transform .1s;position:relative;
+  user-select:none;-webkit-user-select:none;touch-action:none}
+.ach-card:active{transform:scale(.98)}
+.ach-card.dragging{opacity:.28}
 .ach-card.drag-over{outline:2px dashed var(--accent);outline-offset:2px}
-.ach-card.completed .ach-title{text-decoration:line-through;color:var(--text-muted)}
-.ach-card.completed{opacity:.7}
-
-/* Карточка внутри фокуса */
-.focus-grid .ach-card{
-  border-left-width:3px;
-  background:rgba(26,26,36,.9);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)
-}
-.focus-grid .ach-card:hover{
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07),0 4px 16px rgba(0,0,0,.3)
-}
-.focus-grid .ach-card .ach-title{font-size:14px;font-weight:600;letter-spacing:-.1px}
-
-.ach-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
+.ach-card.completed .ach-title{text-decoration:line-through;color:var(--muted)}
+.ach-card.completed{opacity:.68}
+.focus-grid .ach-card{background:rgba(24,24,34,.92);box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
+.focus-grid .ach-card .ach-title{font-size:14px;font-weight:600}
+.ach-top{display:flex;align-items:flex-start;justify-content:space-between;gap:7px;margin-bottom:5px}
 .ach-title{font-size:13px;font-weight:600;line-height:1.4;flex:1}
-.ach-pin-btn{
-  background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:13px;
-  padding:2px;opacity:0;transition:opacity .15s,color .15s;flex-shrink:0;line-height:1
-}
-.ach-card:hover .ach-pin-btn{opacity:1}
-.ach-pin-btn.on{opacity:1;color:var(--gold);text-shadow:0 0 8px rgba(251,191,36,.6)}
-.ach-desc{font-size:12px;color:var(--text-muted);margin-bottom:8px;line-height:1.5}
-.ach-foot{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ach-pin{background:none;border:none;color:var(--dim);cursor:pointer;
+  font-size:14px;padding:1px;opacity:0;transition:opacity .12s,color .12s;
+  flex-shrink:0;line-height:1;-webkit-tap-highlight-color:transparent}
+.ach-card:hover .ach-pin,.ach-card:active .ach-pin{opacity:1}
+.ach-pin.on{opacity:1;color:var(--gold);text-shadow:0 0 8px rgba(251,191,36,.6)}
+.ach-desc{font-size:12px;color:var(--muted);margin-bottom:7px;line-height:1.5}
+.ach-foot{display:flex;align-items:center;justify-content:space-between;gap:6px}
 .ach-stars{font-size:11px;color:var(--gold);letter-spacing:1px}
-.ach-badge{
-  font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
-  padding:2px 7px;border-radius:3px;background:rgba(255,255,255,.06);color:var(--text-muted)
-}
-.ach-card.completed .ach-badge{background:rgba(34,197,94,.15);color:var(--success)}
-.ach-date{font-family:var(--mono);font-size:9px;color:var(--text-dim);margin-top:6px}
+.ach-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;padding:2px 6px;border-radius:3px;background:rgba(255,255,255,.06);color:var(--muted)}
+.ach-card.completed .ach-badge{background:rgba(34,197,94,.15);color:var(--ok)}
+.ach-date{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);margin-top:5px}
 
-/* ── AXES GALLERY ── */
-.axes-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;align-items:start}
+/* ── AXES ── */
+.axes-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;align-items:start}
 @media(max-width:1100px){.axes-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:700px){.axes-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:460px){.axes-grid{grid-template-columns:1fr}}
-
-.axis-col{
-  background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--r);
-  padding:14px 12px;min-height:120px;transition:border-color .15s,background .15s
-}
+.axis-col{background:var(--pan);border:1px solid var(--bdr);border-radius:var(--r);
+  padding:12px 10px;min-height:90px;transition:border-color .15s,background .15s}
 .axis-col.drop-t{border-color:var(--accent);background:rgba(99,102,241,.05)}
-.axis-col-hdr{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}
-.axis-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.axis-name{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
-.axis-cnt{font-family:var(--mono);font-size:10px;color:var(--text-dim);margin-left:auto}
-.axis-cards{display:flex;flex-direction:column;gap:8px;min-height:40px}
+.acol-hdr{display:flex;align-items:center;gap:7px;margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid var(--bdr)}
+.acol-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.acol-name{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.acol-cnt{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);margin-left:auto}
+.acol-cards{display:flex;flex-direction:column;gap:7px;min-height:36px}
 
 /* ── COUNTERS ── */
-.cnt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
-.cnt-card{background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--r);padding:16px}
-.cnt-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px}
+.cnt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:10px}
+.cnt-card{background:var(--pan);border:1px solid var(--bdr);border-radius:var(--r);padding:14px}
+.cnt-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px}
 .cnt-name{font-size:13px;font-weight:600;flex:1}
-.cnt-ctrl{display:flex;align-items:center;gap:6px}
-.cnt-val{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--accent);min-width:36px;text-align:center}
-.btn-plus{
-  width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+.cnt-ctrl{display:flex;align-items:center;gap:7px}
+.cnt-val{font-family:'JetBrains Mono',monospace;font-size:21px;font-weight:700;color:var(--accent);min-width:32px;text-align:center}
+.bplus{width:34px;height:34px;display:flex;align-items:center;justify-content:center;
   background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);color:var(--accent);
-  border-radius:var(--rs);cursor:pointer;font-size:18px;font-weight:700;transition:background .15s;line-height:1
-}
-.btn-plus:hover{background:rgba(99,102,241,.3)}
-.cnt-track{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:6px}
-.cnt-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s ease}
-.cnt-tiers{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;color:var(--text-dim)}
-.cnt-tier.hit{color:var(--success);font-weight:700}
-.cnt-foot{display:flex;justify-content:flex-end;margin-top:10px;gap:6px}
+  border-radius:var(--rs);cursor:pointer;font-size:20px;font-weight:700;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:background .12s}
+.bplus:active{background:rgba(99,102,241,.35)}
+.cnt-track{height:3px;background:var(--bdr);border-radius:2px;overflow:hidden;margin-bottom:5px}
+.cnt-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s}
+.cnt-tiers{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim)}
+.cnt-tier.hit{color:var(--ok);font-weight:700}
+.cnt-foot{display:flex;justify-content:flex-end;margin-top:8px}
 
 /* ── BUCKET ── */
-.bkt-add{display:flex;gap:8px;margin-bottom:12px}
-.bkt-add input{
-  flex:1;background:var(--bg-panel);border:1px solid var(--border);
-  color:var(--text-main);font-family:var(--sans);font-size:13px;
-  padding:8px 12px;border-radius:var(--rs);outline:none;transition:border-color .15s
-}
+.bkt-add{display:flex;gap:7px;margin-bottom:10px}
+.bkt-add input{flex:1;background:var(--pan);border:1px solid var(--bdr);color:var(--txt);
+  font-size:13px;padding:8px 12px;border-radius:var(--rs);outline:none;transition:border-color .12s}
 .bkt-add input:focus{border-color:var(--accent)}
-.bkt-add input::placeholder{color:var(--text-dim)}
-.bkt-list{display:flex;flex-direction:column;gap:6px}
-.bkt-item{
-  display:flex;align-items:center;gap:10px;padding:10px 14px;
-  background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--rs);
-  cursor:grab;transition:background .15s
-}
-.bkt-item:hover{background:var(--bg-card)}
-.bkt-item.dragging{opacity:.4;cursor:grabbing}
+.bkt-add input::placeholder{color:var(--dim)}
+.bkt-list{display:flex;flex-direction:column;gap:5px}
+.bkt-item{display:flex;align-items:center;gap:9px;padding:9px 13px;
+  background:var(--pan);border:1px solid var(--bdr);border-radius:var(--rs);
+  cursor:grab;touch-action:none;-webkit-user-select:none;transition:background .12s}
+.bkt-item:active{background:var(--card);cursor:grabbing}
+.bkt-item.dragging{opacity:.3}
 .bkt-item.drag-over{outline:2px dashed var(--accent);outline-offset:2px}
-.bkt-grip{color:var(--text-dim);font-size:12px;cursor:grab;flex-shrink:0}
+.bkt-grip{color:var(--dim);font-size:12px;flex-shrink:0}
 .bkt-txt{flex:1;font-size:13px}
-.bkt-act{display:flex;gap:5px;opacity:0;transition:opacity .15s}
-.bkt-item:hover .bkt-act{opacity:1}
+.bkt-act{display:flex;gap:4px;opacity:0;transition:opacity .12s}
+.bkt-item:hover .bkt-act,.bkt-item:active .bkt-act{opacity:1}
 
 /* ── RECENT ── */
-.rec-list{display:flex;flex-direction:column;gap:8px}
-.rec-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--rs)}
-.rec-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rec-list{display:flex;flex-direction:column;gap:7px}
+.rec-item{display:flex;align-items:center;gap:11px;padding:9px 13px;
+  background:var(--pan);border:1px solid var(--bdr);border-radius:var(--rs)}
+.rec-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .rec-title{flex:1;font-size:13px;font-weight:500}
-.rec-axis{font-family:var(--mono);font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px}
-.rec-date{font-family:var(--mono);font-size:10px;color:var(--text-dim)}
+.rec-ax{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.rec-date{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim)}
 
 /* ── MODAL ── */
-.modal-back{
-  display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);
-  backdrop-filter:blur(5px);z-index:1000;align-items:center;justify-content:center;padding:20px
-}
-.modal-back.o{display:flex}
-.modal-box{
-  background:#15161e;border:1px solid var(--border-l);border-radius:12px;
-  width:100%;max-width:480px;max-height:90vh;overflow-y:auto;padding:24px;
-  box-shadow:0 24px 60px rgba(0,0,0,.6)
-}
-.m-title{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:20px}
-.m-field{margin-bottom:16px}
-.m-field label{display:block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px}
-.m-field input,.m-field select,.m-field textarea{
-  width:100%;background:var(--bg-card);border:1px solid var(--border);color:var(--text-main);
-  font-family:var(--sans);font-size:13px;padding:9px 12px;border-radius:var(--rs);outline:none;
-  transition:border-color .15s;resize:vertical
-}
-.m-field input:focus,.m-field select:focus,.m-field textarea:focus{border-color:var(--accent)}
-.m-field select option{background:#15161e}
-.diff-row{display:flex;gap:8px}
-.diff-btn{
-  flex:1;padding:8px;background:var(--bg-card);border:1px solid var(--border);color:var(--text-muted);
-  border-radius:var(--rs);cursor:pointer;text-align:center;font-size:14px;transition:all .15s
-}
-.diff-btn:hover{border-color:var(--border-l)}
-.diff-btn.on{border-color:var(--gold);color:var(--gold);background:rgba(251,191,36,.1)}
-.m-acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
-.m-acts-l{display:flex;gap:8px;flex:1}
-.m-acts-r{display:flex;gap:8px}
+.mb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);
+  backdrop-filter:blur(6px);z-index:1000;align-items:center;justify-content:center;
+  padding:16px;overscroll-behavior:contain}
+.mb.o{display:flex}
+.mbox{background:#14151d;border:1px solid var(--bdr-l);border-radius:12px;
+  width:100%;max-width:480px;max-height:92vh;overflow-y:auto;padding:22px;
+  box-shadow:0 24px 60px rgba(0,0,0,.6)}
+.mt{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+.mf{margin-bottom:14px}
+.mf label{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
+.mf input,.mf select,.mf textarea{
+  width:100%;background:var(--card);border:1px solid var(--bdr);color:var(--txt);
+  font-family:'Inter',sans-serif;font-size:13px;padding:8px 11px;border-radius:var(--rs);
+  outline:none;transition:border-color .12s;resize:vertical}
+.mf input:focus,.mf select:focus,.mf textarea:focus{border-color:var(--accent)}
+.mf select option{background:#14151d}
+.mf .hint{font-size:11px;color:var(--dim);margin-top:5px;line-height:1.5}
+.mf .hint a{color:var(--accent);text-decoration:none}
+.diff-row{display:flex;gap:7px}
+.diff-b{flex:1;padding:7px;background:var(--card);border:1px solid var(--bdr);color:var(--muted);
+  border-radius:var(--rs);cursor:pointer;text-align:center;font-size:15px;transition:all .12s}
+.diff-b.on{border-color:var(--gold);color:var(--gold);background:rgba(251,191,36,.1)}
+.macts{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px;padding-top:14px;border-top:1px solid var(--bdr)}
+.ml{display:flex;gap:7px;flex:1} .mr{display:flex;gap:7px}
 
 /* ── TOAST ── */
-#toast{
-  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
-  background:#26263a;border:1px solid var(--border-l);color:var(--text-main);
-  font-family:var(--mono);font-size:12px;padding:10px 18px;border-radius:8px;
-  box-shadow:0 8px 24px rgba(0,0,0,.4);opacity:0;transition:opacity .2s,transform .2s;
-  pointer-events:none;z-index:9999;white-space:nowrap
-}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(18px);
+  background:#26263a;border:1px solid var(--bdr-l);color:var(--txt);
+  font-family:'JetBrains Mono',monospace;font-size:12px;padding:9px 16px;border-radius:8px;
+  box-shadow:0 8px 24px rgba(0,0,0,.4);opacity:0;transition:opacity .18s,transform .18s;
+  pointer-events:none;z-index:9999;white-space:nowrap;max-width:90vw;text-align:center}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ── WELCOME ── */
-#welcome{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);z-index:2000;align-items:center;justify-content:center;padding:20px}
-#welcome.o{display:flex}
-.wlc-box{background:#15161e;border:1px solid var(--border-l);border-radius:14px;padding:32px;max-width:440px;width:100%;text-align:center}
-.wlc-icon{font-size:44px;margin-bottom:16px;filter:drop-shadow(0 0 12px rgba(251,191,36,.5))}
-.wlc-title{font-family:var(--mono);font-size:15px;font-weight:700;margin-bottom:12px}
-.wlc-text{font-size:14px;color:var(--text-muted);line-height:1.75;margin-bottom:24px}
+/* ── TOUCH GHOST ── */
+#drag-ghost{position:fixed;pointer-events:none;z-index:8000;opacity:.86;
+  box-shadow:0 14px 44px rgba(0,0,0,.55);transform:scale(1.04);
+  border-radius:var(--r);transition:none;display:none}
 
-.empty-st{text-align:center;padding:24px 16px;color:var(--text-dim);font-family:var(--mono);font-size:10px;letter-spacing:1px}
+/* ── WELCOME ── */
+#welcome{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);
+  backdrop-filter:blur(8px);z-index:2000;align-items:center;justify-content:center;padding:18px}
+#welcome.o{display:flex}
+.wlc{background:#14151d;border:1px solid var(--bdr-l);border-radius:14px;
+  padding:30px;max-width:420px;width:100%;text-align:center}
+.wlc-icon{font-size:42px;margin-bottom:14px;filter:drop-shadow(0 0 14px rgba(251,191,36,.5))}
+.wlc-title{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;margin-bottom:10px}
+.wlc-text{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:22px}
+
+.empty-st{text-align:center;padding:22px 14px;color:var(--dim);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px}
 input[type=file]{display:none}
-.ns-sep{border-top:1px solid var(--border);padding-top:24px;margin-top:40px}
+.ns-sep{border-top:1px solid var(--bdr);padding-top:22px;margin-top:36px}
 </style>
 </head>
 <body>
 <div id="app">
 
+<!-- SYNC BAR -->
+<div id="sbar">
+  <span class="sbar-status" id="sbar-status">Git не настроен</span>
+  <div class="sbar-btns">
+    <button class="btn sm" onclick="QB.gitPull()" title="Загрузить из репозитория">↓ Загрузить</button>
+    <button class="btn sm ac" onclick="QB.gitPush()" title="Сохранить в репозиторий">↑ Сохранить</button>
+    <button class="btn sm ghost" onclick="QB.openGitSettings()" title="Настройки репозитория">⚙ Git</button>
+  </div>
+</div>
+
 <!-- HEADER -->
 <div id="header">
   <div class="hdr-top">
     <div class="hdr-left">
-      <div id="season-name">СЕЗОН ВЕСНА 2026</div>
-      <div id="season-subtitle">Глава: Приключение</div>
+      <div id="sn">СЕЗОН ВЕСНА 2026</div>
+      <div id="ssub">Глава: Приключение</div>
     </div>
     <div class="hdr-right">
-      <!-- Undo / Redo -->
-      <div class="ud-group">
-        <button class="ud-btn" id="btn-undo" title="Отменить (Ctrl+Z)" onclick="QB.undo()" disabled>↩</button>
-        <button class="ud-btn" id="btn-redo" title="Повторить (Ctrl+Y)" onclick="QB.redo()" disabled>↪</button>
+      <div class="ud">
+        <button class="ub" id="btn-undo" title="Отменить Ctrl+Z" onclick="QB.undo()" disabled>↩</button>
+        <button class="ub" id="btn-redo" title="Повторить Ctrl+Y" onclick="QB.redo()" disabled>↪</button>
       </div>
-      <button class="btn" onclick="QB.exportJSON()">↓ Экспорт</button>
-      <button class="btn" onclick="QB.importClick()">↑ Импорт</button>
+      <button class="btn" onclick="QB.exportJSON()">↓ JSON</button>
+      <button class="btn" onclick="QB.importClick()">↑ JSON</button>
       <button class="btn ac" onclick="QB.openAddAch()">+ Достижение</button>
       <button class="btn" onclick="QB.openAddCounter()">+ Счётчик</button>
       <button class="btn" onclick="QB.openAddBucket()">+ Bucket</button>
-      <button class="btn" onclick="QB.openNewSeason()">⟳ Сезон</button>
     </div>
   </div>
 </div>
 
 <!-- OATH -->
-<section id="oath-section">
+<section>
   <div class="oath-hdr" onclick="QB.toggleOath()">
     <div class="oath-row">
-      <span class="oath-arrow" id="oath-arrow">▶</span>
+      <span class="oath-arr" id="oath-arr">▶</span>
       <span class="oath-lbl">Обет</span>
     </div>
     <button class="btn sm" onclick="event.stopPropagation();QB.openEditOath()">Редактировать</button>
@@ -376,41 +308,38 @@ input[type=file]{display:none}
 
 <!-- XP -->
 <section>
-  <div class="sec-title">Прогресс по осям</div>
+  <div class="stitle">Прогресс по осям</div>
   <div class="xp-grid" id="xp-grid"></div>
 </section>
 
-<!-- FOCUS ZONE -->
-<div id="focus-section"
-  ondragover="QB.focusDragOver(event)"
-  ondragleave="QB.focusDragLeave(event)"
-  ondrop="QB.focusDrop(event)">
+<!-- FOCUS -->
+<div id="focus-sec">
   <div class="focus-hdr">
     <span class="focus-icon">⚡</span>
-    <span class="focus-label">В фокусе</span>
-    <span class="focus-count" id="focus-count">0 / 5</span>
+    <span class="focus-lbl">В фокусе</span>
+    <span class="focus-cnt" id="focus-cnt">0 / 5</span>
     <span class="focus-hint">↓ перетащи сюда</span>
   </div>
   <div class="focus-grid" id="focus-grid"></div>
 </div>
 
-<!-- ACHIEVEMENTS GALLERY -->
+<!-- GALLERY -->
 <section>
-  <div class="sec-title">Галерея достижений</div>
+  <div class="stitle">Галерея достижений</div>
   <div class="axes-grid" id="axes-grid"></div>
 </section>
 
 <!-- COUNTERS -->
 <section>
-  <div class="sec-title">Счётчики</div>
+  <div class="stitle">Счётчики</div>
   <div class="cnt-grid" id="cnt-grid"></div>
 </section>
 
 <!-- BUCKET -->
 <section>
-  <div class="sec-title">Bucket — хочу попробовать</div>
+  <div class="stitle">Bucket — хочу попробовать</div>
   <div class="bkt-add">
-    <input type="text" id="bkt-input" placeholder="Добавить идею..." onkeydown="QB.bktKeydown(event)">
+    <input type="text" id="bkt-in" placeholder="Добавить идею..." onkeydown="QB.bktKey(event)">
     <button class="btn" onclick="QB.addBucket()">Добавить</button>
   </div>
   <div class="bkt-list" id="bkt-list"></div>
@@ -418,7 +347,7 @@ input[type=file]{display:none}
 
 <!-- RECENT -->
 <section>
-  <div class="sec-title">Последние победы</div>
+  <div class="stitle">Последние победы</div>
   <div class="rec-list" id="rec-list"></div>
 </section>
 
@@ -427,31 +356,33 @@ input[type=file]{display:none}
 </div>
 </div><!-- #app -->
 
-<!-- MODALS -->
+<!-- DRAG GHOST -->
+<div id="drag-ghost"></div>
+
+<!-- ══════ MODALS ══════ -->
 
 <!-- Achievement -->
-<div class="modal-back" id="m-ach" onclick="QB.closeM('m-ach')">
-<div class="modal-box" onclick="event.stopPropagation()">
-  <div class="m-title" id="m-ach-title">Достижение</div>
-  <div class="m-field"><label>Название</label><input type="text" id="ach-title" placeholder="Что хочешь сделать?"></div>
-  <div class="m-field"><label>Описание</label><textarea id="ach-desc" rows="2" placeholder="Подробности..."></textarea></div>
-  <div class="m-field"><label>Ось</label><select id="ach-axis"></select></div>
-  <div class="m-field">
-    <label>Сложность</label>
-    <div class="diff-row" id="diff-row">
-      <div class="diff-btn" data-d="1" onclick="QB.setDiff(1)">★</div>
-      <div class="diff-btn" data-d="2" onclick="QB.setDiff(2)">★★</div>
-      <div class="diff-btn" data-d="3" onclick="QB.setDiff(3)">★★★</div>
+<div class="mb" id="m-ach" onclick="QB.closeM('m-ach')">
+<div class="mbox" onclick="event.stopPropagation()">
+  <div class="mt" id="m-ach-t">Достижение</div>
+  <div class="mf"><label>Название</label><input type="text" id="a-title" placeholder="Что хочешь сделать?"></div>
+  <div class="mf"><label>Описание</label><textarea id="a-desc" rows="2" placeholder="Подробности..."></textarea></div>
+  <div class="mf"><label>Ось</label><select id="a-axis"></select></div>
+  <div class="mf"><label>Сложность</label>
+    <div class="diff-row">
+      <div class="diff-b" data-d="1" onclick="QB.setDiff(1)">★</div>
+      <div class="diff-b" data-d="2" onclick="QB.setDiff(2)">★★</div>
+      <div class="diff-b" data-d="3" onclick="QB.setDiff(3)">★★★</div>
     </div>
   </div>
-  <div class="m-field" id="note-field"><label>Заметка</label><textarea id="ach-note" rows="2" placeholder="Что получилось?"></textarea></div>
-  <div class="m-acts">
-    <div class="m-acts-l">
-      <button class="btn ok" id="btn-done" onclick="QB.completeAch()">✓ Сделал!</button>
-      <button class="btn" id="btn-reac" onclick="QB.reactivateAch()" style="display:none">↩ Вернуть</button>
+  <div class="mf" id="note-f"><label>Заметка</label><textarea id="a-note" rows="2" placeholder="Что получилось?"></textarea></div>
+  <div class="macts">
+    <div class="ml">
+      <button class="btn ok" id="b-done" onclick="QB.completeAch()">✓ Сделал!</button>
+      <button class="btn" id="b-reac" onclick="QB.reactivate()" style="display:none">↩ Вернуть</button>
     </div>
-    <div class="m-acts-r">
-      <button class="btn dn" id="btn-del-ach" onclick="QB.deleteAch()">Удалить</button>
+    <div class="mr">
+      <button class="btn dn" id="b-delach" onclick="QB.deleteAch()">Удалить</button>
       <button class="btn" onclick="QB.saveAch()">Сохранить</button>
       <button class="btn" onclick="QB.closeM('m-ach')">✕</button>
     </div>
@@ -460,11 +391,11 @@ input[type=file]{display:none}
 </div>
 
 <!-- Oath -->
-<div class="modal-back" id="m-oath" onclick="QB.closeM('m-oath')">
-<div class="modal-box" onclick="event.stopPropagation()">
-  <div class="m-title">Редактировать обет</div>
+<div class="mb" id="m-oath" onclick="QB.closeM('m-oath')">
+<div class="mbox" onclick="event.stopPropagation()">
+  <div class="mt">Обет</div>
   <div id="oath-fields"></div>
-  <div class="m-acts"><div class="m-acts-r">
+  <div class="macts"><div class="mr">
     <button class="btn ac" onclick="QB.saveOath()">Сохранить</button>
     <button class="btn" onclick="QB.closeM('m-oath')">Отмена</button>
   </div></div>
@@ -472,15 +403,15 @@ input[type=file]{display:none}
 </div>
 
 <!-- Counter -->
-<div class="modal-back" id="m-cnt" onclick="QB.closeM('m-cnt')">
-<div class="modal-box" onclick="event.stopPropagation()">
-  <div class="m-title" id="m-cnt-title">Счётчик</div>
-  <div class="m-field"><label>Название</label><input type="text" id="cnt-name" placeholder="Что считаем?"></div>
-  <div class="m-field"><label>Тиры (через запятую)</label><input type="text" id="cnt-tiers" placeholder="5, 15, 30"></div>
-  <div class="m-field" id="cnt-cur-f"><label>Текущее значение</label><input type="number" id="cnt-cur" min="0" value="0"></div>
-  <div class="m-acts">
-    <div class="m-acts-l"><button class="btn dn" id="btn-del-cnt" onclick="QB.deleteCnt()" style="display:none">Удалить</button></div>
-    <div class="m-acts-r">
+<div class="mb" id="m-cnt" onclick="QB.closeM('m-cnt')">
+<div class="mbox" onclick="event.stopPropagation()">
+  <div class="mt" id="m-cnt-t">Счётчик</div>
+  <div class="mf"><label>Название</label><input type="text" id="c-name" placeholder="Что считаем?"></div>
+  <div class="mf"><label>Тиры (через запятую)</label><input type="text" id="c-tiers" placeholder="5, 15, 30"></div>
+  <div class="mf" id="c-cur-f"><label>Текущее значение</label><input type="number" id="c-cur" min="0" value="0"></div>
+  <div class="macts">
+    <div class="ml"><button class="btn dn" id="b-delcnt" onclick="QB.deleteCnt()" style="display:none">Удалить</button></div>
+    <div class="mr">
       <button class="btn ac" onclick="QB.saveCnt()">Сохранить</button>
       <button class="btn" onclick="QB.closeM('m-cnt')">Отмена</button>
     </div>
@@ -489,40 +420,87 @@ input[type=file]{display:none}
 </div>
 
 <!-- Season -->
-<div class="modal-back" id="m-season" onclick="QB.closeM('m-season')">
-<div class="modal-box" onclick="event.stopPropagation()">
-  <div class="m-title" id="m-season-title">Сезон</div>
-  <div class="m-field"><label>Название сезона</label><input type="text" id="s-name" placeholder="Сезон Лето 2026"></div>
-  <div class="m-field"><label>Подзаголовок</label><input type="text" id="s-sub" placeholder="Глава: ..."></div>
-  <div id="s-warn" style="display:none;padding:10px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:6px;font-size:12px;color:#ef4444;margin-bottom:12px">
+<div class="mb" id="m-season" onclick="QB.closeM('m-season')">
+<div class="mbox" onclick="event.stopPropagation()">
+  <div class="mt" id="m-s-t">Сезон</div>
+  <div class="mf"><label>Название</label><input type="text" id="s-name" placeholder="Сезон Лето 2026"></div>
+  <div class="mf"><label>Подзаголовок</label><input type="text" id="s-sub" placeholder="Глава: ..."></div>
+  <div id="s-warn" style="display:none;padding:9px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:5px;font-size:12px;color:#ef4444;margin-bottom:10px">
     Текущий сезон будет заархивирован. Достижения сбросятся в active, счётчики обнулятся.
   </div>
-  <div class="m-acts"><div class="m-acts-r">
-    <button class="btn ac" id="btn-save-s" onclick="QB.saveSeason()">Сохранить</button>
+  <div class="macts"><div class="mr">
+    <button class="btn ac" id="b-saves" onclick="QB.saveSeason()">Сохранить</button>
     <button class="btn" onclick="QB.closeM('m-season')">Отмена</button>
   </div></div>
 </div>
 </div>
 
+<!-- Git Settings -->
+<div class="mb" id="m-git" onclick="QB.closeM('m-git')">
+<div class="mbox" onclick="event.stopPropagation()">
+  <div class="mt">Настройки репозитория</div>
+  <div class="mf">
+    <label>GitHub Token (PAT)</label>
+    <input type="password" id="g-token" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
+    <div class="hint">
+      Создай токен на <a href="https://github.com/settings/tokens/new?scopes=repo&description=QuestBoard" target="_blank">github.com/settings/tokens</a>
+      — достаточно scope <strong>repo</strong> (или только <strong>public_repo</strong> для публичного репо).
+      Токен хранится только в localStorage этого браузера.
+    </div>
+  </div>
+  <div class="mf">
+    <label>Владелец (username или org)</label>
+    <input type="text" id="g-owner" placeholder="username">
+  </div>
+  <div class="mf">
+    <label>Репозиторий</label>
+    <input type="text" id="g-repo" placeholder="my-quest-board">
+  </div>
+  <div class="mf">
+    <label>Путь к файлу данных</label>
+    <input type="text" id="g-path" placeholder="quest-board-data.json">
+    <div class="hint">Файл будет создан автоматически при первом сохранении. Пример: <code>data/quest-board.json</code></div>
+  </div>
+  <div id="g-repolink" style="display:none;margin-bottom:12px">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim)">Репозиторий: </span>
+    <a id="g-link" href="#" target="_blank" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)"></a>
+  </div>
+  <div class="macts">
+    <div class="ml"><button class="btn dn sm" onclick="QB.clearGit()">Сбросить</button></div>
+    <div class="mr">
+      <button class="btn ac" onclick="QB.saveGitConfig()">Сохранить</button>
+      <button class="btn" onclick="QB.closeM('m-git')">Закрыть</button>
+    </div>
+  </div>
+</div>
+</div>
+
 <div id="toast"></div>
+
 <div id="welcome" class="o">
-  <div class="wlc-box">
+  <div class="wlc">
     <div class="wlc-icon">⚔️</div>
     <div class="wlc-title">QUEST BOARD ЗАГРУЖЕН</div>
-    <div class="wlc-text">Это твой Quest Board на Сезон Весна 2026.<br>Карточки висят — гриндишь когда подвернётся.<br>Перетаскивай в ⚡ Фокус чтобы выделить приоритет.</div>
-    <button class="btn ac" onclick="QB.closeWelcome()" style="width:100%;justify-content:center;padding:12px">Начать</button>
+    <div class="wlc-text">Перетаскивай карточки в ⚡ Фокус.<br>
+    Настрой репозиторий через ⚙ Git — данные будут сохраняться прямо туда коммитом.</div>
+    <button class="btn ac" onclick="QB.closeWelcome()" style="width:100%;justify-content:center;padding:11px">Начать</button>
   </div>
 </div>
 
 <input type="file" id="import-input" accept=".json" onchange="QB.importJSON(event)">
 
 <script>
-/* ════════════════════════════════════════════════════
-   QUEST BOARD — core logic
-   ════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════
+   QUEST BOARD  ·  v4
+   localStorage + GitHub Contents API sync
+   ═══════════════════════════════════════════════════ */
 const QB = (() => {
 
-/* ── SEED ── */
+const LKEY = 'quest_board_v1';
+const AKEY = 'quest_board_archive';
+const GKEY = 'quest_board_git';
+
+/* ─── SEED ─── */
 const SEED = {
   schemaVersion: 1,
   season: { name: 'СЕЗОН ВЕСНА 2026', startedAt: '2026-04-18', subtitle: 'Глава: Приключение' },
@@ -533,14 +511,13 @@ const SEED = {
     'Представляюсь из новой главы. Я solo-разработчик, делаю [ABERRATION], строю FEIGIN ENTERTAINMENT. Студент — уточнение, не главное слово.'
   ],
   axes: [
-    { id:'craft',  name:'Ремесло', color:'#E94560' },
-    { id:'body',   name:'Тело',    color:'#4ADE80' },
-    { id:'circle', name:'Круг',    color:'#FBBF24' },
-    { id:'fun',    name:'Фан',     color:'#A78BFA' },
-    { id:'growth', name:'Рост',    color:'#60A5FA' }
+    {id:'craft', name:'Ремесло',color:'#E94560'},
+    {id:'body',  name:'Тело',   color:'#4ADE80'},
+    {id:'circle',name:'Круг',   color:'#FBBF24'},
+    {id:'fun',   name:'Фан',    color:'#A78BFA'},
+    {id:'growth',name:'Рост',   color:'#60A5FA'}
   ],
   achievements:[
-    // CIRCLE
     {id:uid(),title:'Первая импровизация',description:'Сходить на первый урок импро',axis:'circle',difficulty:1,status:'active',pinned:true,completedAt:null,note:'',order:0},
     {id:uid(),title:'Заговорил с красивой незнакомкой на улице',description:'',axis:'circle',difficulty:2,status:'active',pinned:false,completedAt:null,note:'',order:1},
     {id:uid(),title:'Первое свидание в новой главе',description:'',axis:'circle',difficulty:2,status:'active',pinned:false,completedAt:null,note:'',order:2},
@@ -549,7 +526,6 @@ const SEED = {
     {id:uid(),title:'Ночной разговор с близким другом о важном',description:'',axis:'circle',difficulty:1,status:'active',pinned:false,completedAt:null,note:'',order:5},
     {id:uid(),title:'Дискотека без цели (только кайфануть)',description:'',axis:'circle',difficulty:1,status:'active',pinned:false,completedAt:null,note:'',order:6},
     {id:uid(),title:'Волонтёрство с задачей',description:'',axis:'circle',difficulty:1,status:'active',pinned:false,completedAt:null,note:'',order:7},
-    // FUN
     {id:uid(),title:'Первый урок сёрфинга',description:'',axis:'fun',difficulty:2,status:'active',pinned:false,completedAt:null,note:'',order:0},
     {id:uid(),title:'Съездить в Петру',description:'',axis:'fun',difficulty:3,status:'active',pinned:false,completedAt:null,note:'',order:1},
     {id:uid(),title:'Ночь в дюнах',description:'',axis:'fun',difficulty:2,status:'active',pinned:false,completedAt:null,note:'',order:2},
@@ -557,7 +533,6 @@ const SEED = {
     {id:uid(),title:'Концерт или выставка в одиночку',description:'',axis:'fun',difficulty:1,status:'active',pinned:false,completedAt:null,note:'',order:4},
     {id:uid(),title:'Съездить в новый город на день',description:'',axis:'fun',difficulty:2,status:'active',pinned:false,completedAt:null,note:'',order:5},
     {id:uid(),title:'Попробовать керамику или незнакомый мастер-класс',description:'',axis:'fun',difficulty:1,status:'active',pinned:false,completedAt:null,note:'',order:6},
-    // CRAFT
     {id:uid(),title:'Написал первому стримеру',description:'Написать первому стримеру-хоррор летсплееру',axis:'craft',difficulty:2,status:'active',pinned:true,completedAt:null,note:'',order:0},
     {id:uid(),title:'Запустил Discord-сообщество [ABERRATION]',description:'',axis:'craft',difficulty:2,status:'active',pinned:false,completedAt:null,note:'',order:1},
     {id:uid(),title:'Первая играбельная демо-сцена',description:'',axis:'craft',difficulty:3,status:'active',pinned:false,completedAt:null,note:'',order:2},
@@ -568,13 +543,11 @@ const SEED = {
     {id:uid(),title:'Next Fest октябрь 2026 — участие',description:'',axis:'craft',difficulty:3,status:'active',pinned:false,completedAt:null,note:'',order:7},
     {id:uid(),title:"1000 wishlist'ов",description:'',axis:'craft',difficulty:2,status:'active',pinned:false,completedAt:null,note:'',order:8},
     {id:uid(),title:"8000 wishlist'ов",description:'',axis:'craft',difficulty:3,status:'active',pinned:false,completedAt:null,note:'',order:9},
-    // BODY
     {id:uid(),title:'Новый PR в Convict Conditioning',description:'',axis:'body',difficulty:2,status:'active',pinned:false,completedAt:null,note:'',order:0},
     {id:uid(),title:'20 км пешком за день',description:'',axis:'body',difficulty:2,status:'active',pinned:false,completedAt:null,note:'',order:1},
     {id:uid(),title:'Утро в море 7 дней подряд',description:'',axis:'body',difficulty:2,status:'active',pinned:false,completedAt:null,note:'',order:2},
     {id:uid(),title:'Месяц регулярных тренировок без пропусков',description:'',axis:'body',difficulty:2,status:'active',pinned:false,completedAt:null,note:'',order:3},
     {id:uid(),title:'Попробовать новый вид активности (сёрф, скалолазание, бокс)',description:'',axis:'body',difficulty:1,status:'active',pinned:false,completedAt:null,note:'',order:4},
-    // GROWTH
     {id:uid(),title:'Прочитать книгу о дизайне полностью',description:'',axis:'growth',difficulty:2,status:'active',pinned:false,completedAt:null,note:'',order:0},
     {id:uid(),title:'Закончить курс актёрского мастерства',description:'',axis:'growth',difficulty:3,status:'active',pinned:true,completedAt:null,note:'',order:1},
     {id:uid(),title:'Пролистать 3 книги по архитектуре/дизайну',description:'',axis:'growth',difficulty:1,status:'active',pinned:false,completedAt:null,note:'',order:2},
@@ -599,82 +572,57 @@ const SEED = {
   ]
 };
 
-/* ── STATE ── */
+/* ─── APP STATE ─── */
 let S = null;
-let history = [], histIdx = -1;
+let hist = [], hidx = -1;
 let oathOpen = false;
 let editAchId = null, curDiff = 1;
 let editCntId = null;
 let isNewSeason = false;
-let dragId = null, dragFrom = null; // dragFrom: 'focus' | 'axis'
-let bktDragId = null;
 
-const KEY = 'quest_board_v1';
-const ARC = 'quest_board_archive';
-
-/* ── HELPERS ── */
+/* ─── HELPERS ─── */
 function uid(){ return Math.random().toString(36).slice(2)+Date.now().toString(36); }
-
-function save(){ localStorage.setItem(KEY, JSON.stringify(S)); }
-
-function pushHistory(){
-  history = history.slice(0, histIdx+1);
-  history.push(JSON.stringify(S));
-  if(history.length > 60) history.shift();
-  histIdx = history.length - 1;
-  updateUD();
-}
-
-function commit(){
-  pushHistory();
-  save();
-  render();
-}
-
-function updateUD(){
-  document.getElementById('btn-undo').disabled = (histIdx <= 0);
-  document.getElementById('btn-redo').disabled = (histIdx >= history.length-1);
-}
-
-function undo(){
-  if(histIdx <= 0) return;
-  histIdx--;
-  S = JSON.parse(history[histIdx]);
-  save(); render(); updateUD();
-  toast('Отменено');
-}
-
-function redo(){
-  if(histIdx >= history.length-1) return;
-  histIdx++;
-  S = JSON.parse(history[histIdx]);
-  save(); render(); updateUD();
-  toast('Повторено');
-}
-
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function today(){ return new Date().toISOString().slice(0,10); }
+function fmtDate(d){ if(!d)return''; const[y,m,day]=d.split('-'); return`${day}.${m}.${y}`; }
 function axColor(id){ const a=S.axes.find(x=>x.id===id); return a?a.color:'#6366f1'; }
 function axName(id){ const a=S.axes.find(x=>x.id===id); return a?a.name:id; }
-function stars(n){ return '★'.repeat(n)+'☆'.repeat(3-n); }
-function today(){ return new Date().toISOString().slice(0,10); }
-function fmtDate(d){ if(!d)return''; const[y,m,day]=d.split('-'); return `${day}.${m}.${y}`; }
-function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function stars(n){ return'★'.repeat(n)+'☆'.repeat(3-n); }
 
-function getXP(axId){ return S.achievements.filter(a=>a.axis===axId&&a.status==='completed').reduce((s,a)=>s+a.difficulty,0); }
-function getLevel(xp){
-  if(xp>=50) return{level:5,min:50,max:null};
-  if(xp>=30) return{level:4,min:30,max:50};
-  if(xp>=15) return{level:3,min:15,max:30};
-  if(xp>=5)  return{level:2,min:5, max:15};
-  return{level:1,min:0,max:5};
-}
-
-function toast(msg,dur=2000){
+let toastT;
+function toast(msg,dur=2200){
   const el=document.getElementById('toast');
   el.textContent=msg; el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),dur);
+  clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show'),dur);
 }
 
-/* ── RENDER ── */
+function save(){ localStorage.setItem(LKEY,JSON.stringify(S)); }
+
+function pushHist(){
+  hist=hist.slice(0,hidx+1);
+  hist.push(JSON.stringify(S));
+  if(hist.length>60) hist.shift();
+  hidx=hist.length-1;
+  updUD();
+}
+function commit(){ pushHist(); save(); render(); }
+function updUD(){
+  document.getElementById('btn-undo').disabled=(hidx<=0);
+  document.getElementById('btn-redo').disabled=(hidx>=hist.length-1);
+}
+function undo(){ if(hidx<=0)return; hidx--; S=JSON.parse(hist[hidx]); save(); render(); updUD(); toast('Отменено'); }
+function redo(){ if(hidx>=hist.length-1)return; hidx++; S=JSON.parse(hist[hidx]); save(); render(); updUD(); toast('Повторено'); }
+
+function getXP(axId){ return S.achievements.filter(a=>a.axis===axId&&a.status==='completed').reduce((s,a)=>s+a.difficulty,0); }
+function getLv(xp){
+  if(xp>=50)return{lv:5,min:50,max:null};
+  if(xp>=30)return{lv:4,min:30,max:50};
+  if(xp>=15)return{lv:3,min:15,max:30};
+  if(xp>=5) return{lv:2,min:5, max:15};
+  return{lv:1,min:0,max:5};
+}
+
+/* ═══════════ RENDER ═══════════ */
 function render(){
   renderHeader(); renderOath(); renderXP();
   renderFocus(); renderAxes();
@@ -682,317 +630,79 @@ function render(){
 }
 
 function renderHeader(){
-  document.getElementById('season-name').textContent=S.season.name;
-  document.getElementById('season-subtitle').textContent=S.season.subtitle;
+  document.getElementById('sn').textContent=S.season.name;
+  document.getElementById('ssub').textContent=S.season.subtitle;
 }
 
 function renderOath(){
-  const body=document.getElementById('oath-body');
-  const arr=document.getElementById('oath-arrow');
-  body.classList.toggle('o',oathOpen);
-  arr.classList.toggle('o',oathOpen);
-  body.innerHTML='<ul class="oath-list">'+S.oath.map(t=>`<li class="oath-item">${esc(t)}</li>`).join('')+'</ul>';
+  document.getElementById('oath-body').classList.toggle('o',oathOpen);
+  document.getElementById('oath-arr').classList.toggle('o',oathOpen);
+  document.getElementById('oath-body').innerHTML=
+    '<ul class="oath-list">'+S.oath.map(t=>`<li class="oath-item">${esc(t)}</li>`).join('')+'</ul>';
 }
 
 function renderXP(){
   document.getElementById('xp-grid').innerHTML=S.axes.map(ax=>{
-    const xp=getXP(ax.id);
-    const{level,min,max}=getLevel(xp);
+    const xp=getXP(ax.id),{lv,min,max}=getLv(xp);
     const pct=max?Math.min(100,((xp-min)/(max-min))*100):100;
-    const txt=max?`${xp-min}/${max-min} XP`:`${xp} XP — MAX`;
     return`<div class="xp-card">
-      <div class="xp-top">
-        <span class="xp-name" style="color:${ax.color}">${ax.name}</span>
-        <span class="xp-lv">LVL ${level}</span>
-      </div>
+      <div class="xp-top"><span class="xp-name" style="color:${ax.color}">${ax.name}</span><span class="xp-lv">LVL ${lv}</span></div>
       <div class="xp-track"><div class="xp-fill" style="width:${pct}%;background:${ax.color}"></div></div>
-      <div class="xp-txt">${txt}</div>
+      <div class="xp-txt">${max?`${xp-min}/${max-min} XP`:`${xp} XP — MAX`}</div>
     </div>`;
   }).join('');
 }
 
-/* ── FOCUS ZONE ── */
 function renderFocus(){
   const pinned=S.achievements.filter(a=>a.pinned&&a.status==='active');
-  document.getElementById('focus-count').textContent=`${pinned.length} / 5`;
-  const grid=document.getElementById('focus-grid');
-  if(!pinned.length){
-    grid.innerHTML='<div class="focus-drop-zone" id="focus-empty">Перетащи карточку сюда чтобы взять в фокус</div>';
-  } else {
-    grid.innerHTML=pinned.map(a=>achCard(a,true)).join('');
-  }
+  document.getElementById('focus-cnt').textContent=`${pinned.length} / 5`;
+  const g=document.getElementById('focus-grid');
+  g.innerHTML=pinned.length
+    ? pinned.map(a=>achCardHTML(a,true)).join('')
+    : '<div class="focus-empty" id="focus-empty">Перетащи карточку сюда чтобы взять в фокус</div>';
 }
 
-/* ── AXES GALLERY ── */
 function renderAxes(){
   document.getElementById('axes-grid').innerHTML=S.axes.map(ax=>{
     const achs=S.achievements.filter(a=>a.axis===ax.id).sort((a,b)=>a.order-b.order);
     const done=achs.filter(a=>a.status==='completed').length;
-    return`<div class="axis-col" data-axis="${ax.id}"
-      ondragover="QB.axisDragOver(event,'${ax.id}')"
-      ondragleave="QB.axisDragLeave(event)"
-      ondrop="QB.axisDrop(event,'${ax.id}')">
-      <div class="axis-col-hdr">
-        <div class="axis-dot" style="background:${ax.color}"></div>
-        <span class="axis-name" style="color:${ax.color}">${ax.name}</span>
-        <span class="axis-cnt">${done}/${achs.length}</span>
+    return`<div class="axis-col" data-axis="${ax.id}">
+      <div class="acol-hdr">
+        <div class="acol-dot" style="background:${ax.color}"></div>
+        <span class="acol-name" style="color:${ax.color}">${ax.name}</span>
+        <span class="acol-cnt">${done}/${achs.length}</span>
       </div>
-      <div class="axis-cards" data-axis="${ax.id}">
-        ${achs.length?achs.map(a=>achCard(a,false)).join(''):'<div class="empty-st">Пусто</div>'}
+      <div class="acol-cards" data-axis="${ax.id}">
+        ${achs.length?achs.map(a=>achCardHTML(a,false)).join(''):'<div class="empty-st">Пусто</div>'}
       </div>
     </div>`;
   }).join('');
 }
 
-function achCard(a, inFocus){
+function achCardHTML(a,inFocus){
   const color=axColor(a.axis);
   const isPinned=a.pinned&&a.status==='active';
-  const borderColor=a.status==='completed'?color:(isPinned?color:'transparent');
-  const glow=isPinned&&inFocus?`box-shadow:0 0 0 1px ${color}33,0 4px 20px ${color}22`:''
-  const completedLine=a.completedAt?`<div class="ach-date">✓ ${fmtDate(a.completedAt)}</div>`:'';
-  const pinIcon=isPinned?'★':'☆';
-  const pinTitle=isPinned?'Убрать из фокуса':'Добавить в фокус';
-  return`<div class="ach-card ${a.status}" data-id="${a.id}"
-    style="border-left-color:${borderColor};${glow}"
-    draggable="true"
-    ondragstart="QB.achDragStart(event,'${a.id}','${inFocus?'focus':'axis'}')"
-    ondragover="QB.achDragOver(event)"
-    ondragleave="QB.achDragLeave(event)"
-    ondrop="QB.achDrop(event,'${a.id}')"
-    ondragend="QB.achDragEnd(event)"
-    onclick="QB.openEditAch('${a.id}')">
+  const blc=a.status==='completed'?color:(isPinned?color:'transparent');
+  const glow=isPinned&&inFocus?`box-shadow:0 0 0 1px ${color}33,0 4px 18px ${color}1a`:'';
+  return`<div class="ach-card ${a.status}" data-id="${a.id}" data-from="${inFocus?'focus':'axis'}"
+    style="border-left-color:${blc};${glow}" onclick="QB.openEditAch('${a.id}')">
     <div class="ach-top">
       <div class="ach-title">${esc(a.title)}</div>
-      ${a.status==='active'?`<button class="ach-pin-btn ${isPinned?'on':''}" title="${pinTitle}"
-        onclick="event.stopPropagation();QB.togglePin('${a.id}')">${pinIcon}</button>`:''}
+      ${a.status==='active'?`<button class="ach-pin ${isPinned?'on':''}"
+        onclick="event.stopPropagation();QB.togglePin('${a.id}')">${isPinned?'★':'☆'}</button>`:''}
     </div>
     ${a.description?`<div class="ach-desc">${esc(a.description)}</div>`:''}
     <div class="ach-foot">
       <span class="ach-stars">${stars(a.difficulty)}</span>
       <span class="ach-badge">${a.status==='completed'?'выполнено':'активно'}</span>
     </div>
-    ${completedLine}
+    ${a.completedAt?`<div class="ach-date">✓ ${fmtDate(a.completedAt)}</div>`:''}
   </div>`;
 }
 
-/* ── DRAG & DROP ── */
-
-// Achievement drag
-function achDragStart(e,id,from){
-  dragId=id; dragFrom=from;
-  e.currentTarget.classList.add('dragging');
-  e.dataTransfer.effectAllowed='move';
-  e.dataTransfer.setData('text/plain',JSON.stringify({id,from}));
-}
-function achDragOver(e){
-  e.preventDefault(); e.stopPropagation();
-  e.currentTarget.classList.add('drag-over');
-  e.dataTransfer.dropEffect='move';
-}
-function achDragLeave(e){ e.currentTarget.classList.remove('drag-over'); }
-function achDrop(e,targetId){
-  e.preventDefault(); e.stopPropagation();
-  e.currentTarget.classList.remove('drag-over');
-  if(!dragId||dragId===targetId) return;
-  const src=S.achievements.find(x=>x.id===dragId);
-  const tgt=S.achievements.find(x=>x.id===targetId);
-  if(!src||!tgt) return;
-  if(src.axis===tgt.axis){
-    const tmp=src.order; src.order=tgt.order; tgt.order=tmp;
-  } else {
-    src.axis=tgt.axis; src.order=tgt.order-0.5;
-    S.achievements.filter(a=>a.axis===src.axis).sort((a,b)=>a.order-b.order).forEach((a,i)=>a.order=i);
-  }
-  commit();
-}
-function achDragEnd(e){
-  e.currentTarget.classList.remove('dragging');
-  dragId=null; dragFrom=null;
-  document.querySelectorAll('.drag-over').forEach(el=>el.classList.remove('drag-over'));
-}
-
-// Axis column drop — also handles unpin from focus
-function axisDragOver(e,axId){
-  e.preventDefault();
-  e.currentTarget.classList.add('drop-t');
-  e.dataTransfer.dropEffect='move';
-}
-function axisDragLeave(e){ e.currentTarget.classList.remove('drop-t'); }
-function axisDrop(e,axId){
-  e.preventDefault();
-  e.currentTarget.classList.remove('drop-t');
-  let id=dragId;
-  if(!id){ try{ const d=JSON.parse(e.dataTransfer.getData('text/plain')); id=d.id; }catch(ex){} }
-  if(!id) return;
-  const src=S.achievements.find(x=>x.id===id);
-  if(!src) return;
-  const wasInFocus=src.pinned&&src.status==='active';
-  // If dragged from focus to same axis or different axis — just unpin
-  if(src.pinned) src.pinned=false;
-  if(src.axis!==axId){
-    src.axis=axId;
-    const maxOrd=S.achievements.filter(a=>a.axis===axId&&a.id!==id).reduce((m,a)=>Math.max(m,a.order),-1);
-    src.order=maxOrd+1;
-  }
-  commit();
-  if(wasInFocus) toast('Убрано из фокуса');
-}
-
-// Focus zone drop — pins the card
-function focusDragOver(e){
-  e.preventDefault();
-  document.getElementById('focus-section').classList.add('drag-active');
-  const empty=document.getElementById('focus-empty');
-  if(empty) empty.classList.add('hot');
-  e.dataTransfer.dropEffect='move';
-}
-function focusDragLeave(e){
-  // only remove highlight if we left the section entirely
-  if(!document.getElementById('focus-section').contains(e.relatedTarget)){
-    document.getElementById('focus-section').classList.remove('drag-active');
-    const empty=document.getElementById('focus-empty');
-    if(empty) empty.classList.remove('hot');
-  }
-}
-function focusDrop(e){
-  e.preventDefault();
-  document.getElementById('focus-section').classList.remove('drag-active');
-  const empty=document.getElementById('focus-empty');
-  if(empty) empty.classList.remove('hot');
-  let id=dragId;
-  if(!id){ try{ const d=JSON.parse(e.dataTransfer.getData('text/plain')); id=d.id; }catch(ex){} }
-  if(!id) return;
-  const src=S.achievements.find(x=>x.id===id);
-  if(!src||src.status!=='active') return;
-  if(src.pinned){ toast('Уже в фокусе'); return; }
-  const pinCount=S.achievements.filter(a=>a.pinned&&a.status==='active').length;
-  if(pinCount>=5){ toast('В фокусе уже 5 квестов — максимум'); return; }
-  src.pinned=true;
-  commit();
-  toast('⚡ Добавлено в фокус');
-}
-
-// Bucket drag
-function bktDragStart(e,id){
-  bktDragId=id;
-  e.currentTarget.classList.add('dragging');
-  e.dataTransfer.effectAllowed='move';
-}
-function bktDragOver(e){ e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
-function bktDragLeave(e){ e.currentTarget.classList.remove('drag-over'); }
-function bktDrop(e,tgtId){
-  e.preventDefault(); e.currentTarget.classList.remove('drag-over');
-  if(!bktDragId||bktDragId===tgtId) return;
-  const si=S.bucket.findIndex(b=>b.id===bktDragId);
-  const ti=S.bucket.findIndex(b=>b.id===tgtId);
-  if(si===-1||ti===-1) return;
-  const[item]=S.bucket.splice(si,1); S.bucket.splice(ti,0,item);
-  commit();
-}
-function bktDragEnd(e){
-  e.currentTarget.classList.remove('dragging');
-  bktDragId=null;
-  document.querySelectorAll('.drag-over').forEach(el=>el.classList.remove('drag-over'));
-}
-
-/* ── OATH ── */
-function toggleOath(){ oathOpen=!oathOpen; renderOath(); }
-function openEditOath(){
-  document.getElementById('oath-fields').innerHTML=S.oath.map((r,i)=>`
-    <div class="m-field"><label>Правило ${i+1}</label>
-    <textarea id="or-${i}" rows="3">${esc(r)}</textarea></div>`).join('');
-  openM('m-oath');
-}
-function saveOath(){
-  S.oath=S.oath.map((_,i)=>{ const el=document.getElementById(`or-${i}`); return el?el.value.trim():S.oath[i]; });
-  commit(); closeM('m-oath'); toast('Обет сохранён');
-}
-
-/* ── ACHIEVEMENT MODAL ── */
-function fillAxisSel(sel){
-  document.getElementById('ach-axis').innerHTML=S.axes.map(a=>`<option value="${a.id}" ${a.id===sel?'selected':''}>${a.name}</option>`).join('');
-}
-function openAddAch(pre={}){
-  editAchId=null;
-  document.getElementById('m-ach-title').textContent='Новое достижение';
-  document.getElementById('ach-title').value=pre.title||'';
-  document.getElementById('ach-desc').value=pre.desc||'';
-  document.getElementById('ach-note').value='';
-  curDiff=pre.difficulty||1; fillAxisSel(pre.axis||S.axes[0].id); updateDiffUI();
-  document.getElementById('btn-done').style.display='none';
-  document.getElementById('btn-reac').style.display='none';
-  document.getElementById('btn-del-ach').style.display='none';
-  document.getElementById('note-field').style.display='none';
-  openM('m-ach');
-}
-function openEditAch(id){
-  const a=S.achievements.find(x=>x.id===id); if(!a) return;
-  editAchId=id;
-  document.getElementById('m-ach-title').textContent='Редактировать достижение';
-  document.getElementById('ach-title').value=a.title;
-  document.getElementById('ach-desc').value=a.description;
-  document.getElementById('ach-note').value=a.note||'';
-  curDiff=a.difficulty; fillAxisSel(a.axis); updateDiffUI();
-  document.getElementById('note-field').style.display='block';
-  document.getElementById('btn-del-ach').style.display='inline-flex';
-  document.getElementById('btn-done').style.display=a.status==='active'?'inline-flex':'none';
-  document.getElementById('btn-reac').style.display=a.status==='completed'?'inline-flex':'none';
-  openM('m-ach');
-}
-function setDiff(n){ curDiff=n; updateDiffUI(); }
-function updateDiffUI(){ document.querySelectorAll('.diff-btn').forEach(b=>b.classList.toggle('on',+b.dataset.d===curDiff)); }
-
-function saveAch(){
-  const title=document.getElementById('ach-title').value.trim();
-  if(!title){ toast('Введи название'); return; }
-  const axis=document.getElementById('ach-axis').value;
-  const desc=document.getElementById('ach-desc').value.trim();
-  const note=document.getElementById('ach-note').value.trim();
-  if(editAchId){
-    const a=S.achievements.find(x=>x.id===editAchId);
-    if(a){ a.title=title; a.description=desc; a.axis=axis; a.difficulty=curDiff; a.note=note; }
-    toast('Сохранено');
-  } else {
-    const maxO=S.achievements.filter(x=>x.axis===axis).reduce((m,x)=>Math.max(m,x.order),-1);
-    S.achievements.push({id:uid(),title,description:desc,axis,difficulty:curDiff,status:'active',pinned:false,completedAt:null,note,order:maxO+1});
-    toast('Достижение добавлено');
-  }
-  commit(); closeM('m-ach');
-}
-function completeAch(){
-  if(!editAchId) return;
-  const a=S.achievements.find(x=>x.id===editAchId); if(!a) return;
-  a.note=document.getElementById('ach-note').value.trim();
-  a.status='completed'; a.completedAt=today(); a.pinned=false;
-  commit(); closeM('m-ach');
-  toast(`✓ Выполнено! +${a.difficulty} XP → ${axName(a.axis)}`);
-}
-function reactivateAch(){
-  if(!editAchId) return;
-  const a=S.achievements.find(x=>x.id===editAchId); if(!a) return;
-  a.status='active'; a.completedAt=null;
-  commit(); closeM('m-ach'); toast('Возвращено в активные');
-}
-function deleteAch(){
-  if(!editAchId||!confirm('Удалить достижение?')) return;
-  S.achievements=S.achievements.filter(x=>x.id!==editAchId);
-  commit(); closeM('m-ach'); toast('Удалено');
-}
-function togglePin(id){
-  const a=S.achievements.find(x=>x.id===id); if(!a) return;
-  if(!a.pinned){
-    const cnt=S.achievements.filter(x=>x.pinned&&x.status==='active').length;
-    if(cnt>=5){ toast('В фокусе уже 5 квестов'); return; }
-  }
-  a.pinned=!a.pinned;
-  commit();
-  toast(a.pinned?'⚡ Добавлено в фокус':'Убрано из фокуса');
-}
-
-/* ── COUNTERS ── */
 function renderCounters(){
   const g=document.getElementById('cnt-grid');
-  if(!S.counters.length){ g.innerHTML='<div class="empty-st">Нет счётчиков</div>'; return; }
+  if(!S.counters.length){g.innerHTML='<div class="empty-st">Нет счётчиков</div>';return;}
   g.innerHTML=S.counters.map(c=>{
     const next=c.tiers.find(t=>t>c.current);
     const pct=next?Math.min(100,(c.current/next)*100):100;
@@ -1000,10 +710,8 @@ function renderCounters(){
     return`<div class="cnt-card">
       <div class="cnt-top">
         <div class="cnt-name">${esc(c.name)}</div>
-        <div class="cnt-ctrl">
-          <div class="cnt-val">${c.current}</div>
-          <button class="btn-plus" onclick="QB.incCnt('${c.id}')">+</button>
-        </div>
+        <div class="cnt-ctrl"><div class="cnt-val">${c.current}</div>
+          <button class="bplus" onclick="QB.incCnt('${c.id}')">+</button></div>
       </div>
       <div class="cnt-track"><div class="cnt-fill" style="width:${pct}%"></div></div>
       <div class="cnt-tiers">${tHTML}</div>
@@ -1011,67 +719,12 @@ function renderCounters(){
     </div>`;
   }).join('');
 }
-function openAddCounter(){
-  editCntId=null;
-  document.getElementById('m-cnt-title').textContent='Новый счётчик';
-  document.getElementById('cnt-name').value='';
-  document.getElementById('cnt-tiers').value='5, 15, 30';
-  document.getElementById('cnt-cur').value='0';
-  document.getElementById('cnt-cur-f').style.display='none';
-  document.getElementById('btn-del-cnt').style.display='none';
-  openM('m-cnt');
-}
-function openEditCnt(id){
-  const c=S.counters.find(x=>x.id===id); if(!c) return;
-  editCntId=id;
-  document.getElementById('m-cnt-title').textContent='Редактировать счётчик';
-  document.getElementById('cnt-name').value=c.name;
-  document.getElementById('cnt-tiers').value=c.tiers.join(', ');
-  document.getElementById('cnt-cur').value=c.current;
-  document.getElementById('cnt-cur-f').style.display='block';
-  document.getElementById('btn-del-cnt').style.display='inline-flex';
-  openM('m-cnt');
-}
-function saveCnt(){
-  const name=document.getElementById('cnt-name').value.trim();
-  if(!name){ toast('Введи название'); return; }
-  const tiers=document.getElementById('cnt-tiers').value.split(',').map(t=>parseInt(t.trim())).filter(n=>!isNaN(n)&&n>0).sort((a,b)=>a-b);
-  if(!tiers.length){ toast('Введи тиры'); return; }
-  const cur=parseInt(document.getElementById('cnt-cur').value)||0;
-  if(editCntId){
-    const c=S.counters.find(x=>x.id===editCntId);
-    if(c){ c.name=name; c.tiers=tiers; c.current=cur; }
-    toast('Счётчик обновлён');
-  } else {
-    S.counters.push({id:uid(),name,current:0,tiers});
-    toast('Счётчик добавлен');
-  }
-  commit(); closeM('m-cnt');
-}
-function deleteCnt(){
-  if(!editCntId||!confirm('Удалить счётчик?')) return;
-  S.counters=S.counters.filter(x=>x.id!==editCntId);
-  commit(); closeM('m-cnt'); toast('Удалено');
-}
-function incCnt(id){
-  const c=S.counters.find(x=>x.id===id); if(!c) return;
-  c.current++;
-  const hit=c.tiers.find(t=>t===c.current);
-  commit();
-  if(hit) toast(`🏆 Тир ${hit} достигнут — ${c.name}`);
-}
 
-/* ── BUCKET ── */
 function renderBucket(){
   const list=document.getElementById('bkt-list');
-  if(!S.bucket.length){ list.innerHTML='<div class="empty-st">Bucket пуст</div>'; return; }
+  if(!S.bucket.length){list.innerHTML='<div class="empty-st">Bucket пуст</div>';return;}
   list.innerHTML=S.bucket.map(b=>`
-    <div class="bkt-item" data-id="${b.id}" draggable="true"
-      ondragstart="QB.bktDragStart(event,'${b.id}')"
-      ondragover="QB.bktDragOver(event)"
-      ondragleave="QB.bktDragLeave(event)"
-      ondrop="QB.bktDrop(event,'${b.id}')"
-      ondragend="QB.bktDragEnd(event)">
+    <div class="bkt-item" data-id="${b.id}">
       <span class="bkt-grip">⠿</span>
       <span class="bkt-txt">${esc(b.text)}</span>
       <div class="bkt-act">
@@ -1080,95 +733,534 @@ function renderBucket(){
       </div>
     </div>`).join('');
 }
-function openAddBucket(){ document.getElementById('bkt-input').focus(); }
-function addBucket(){
-  const inp=document.getElementById('bkt-input');
-  const text=inp.value.trim(); if(!text) return;
-  S.bucket.push({id:uid(),text}); inp.value='';
-  commit();
-}
-function bktKeydown(e){ if(e.key==='Enter') addBucket(); }
-function delBucket(id){ S.bucket=S.bucket.filter(b=>b.id!==id); commit(); }
-function bktToAch(id){ const b=S.bucket.find(x=>x.id===id); if(!b) return; openAddAch({title:b.text}); }
 
-/* ── RECENT ── */
 function renderRecent(){
   const list=document.getElementById('rec-list');
   const rec=S.achievements.filter(a=>a.status==='completed')
     .sort((a,b)=>(b.completedAt||'').localeCompare(a.completedAt||'')).slice(0,5);
-  if(!rec.length){ list.innerHTML='<div class="empty-st">Нет выполненных достижений</div>'; return; }
+  if(!rec.length){list.innerHTML='<div class="empty-st">Нет выполненных достижений</div>';return;}
   list.innerHTML=rec.map(a=>`
     <div class="rec-item">
       <div class="rec-dot" style="background:${axColor(a.axis)}"></div>
       <div class="rec-title">${esc(a.title)}</div>
-      <div class="rec-axis">${axName(a.axis)}</div>
+      <div class="rec-ax">${axName(a.axis)}</div>
       <div class="rec-date">${fmtDate(a.completedAt)}</div>
     </div>`).join('');
 }
 
-/* ── SEASON ── */
+/* ═══════════════════════════════════════
+   DRAG & DROP — shared logic
+   ═══════════════════════════════════════ */
+function pinAch(id){
+  const src=S.achievements.find(x=>x.id===id);
+  if(!src||src.status!=='active') return;
+  if(src.pinned){toast('Уже в фокусе');return;}
+  const cnt=S.achievements.filter(a=>a.pinned&&a.status==='active').length;
+  if(cnt>=5){toast('В фокусе уже 5 квестов');return;}
+  src.pinned=true; commit(); toast('⚡ Добавлено в фокус');
+}
+
+function dropAchToAxis(id,axId,targetCardId){
+  const src=S.achievements.find(x=>x.id===id); if(!src) return;
+  const wasPinned=src.pinned;
+  src.pinned=false;
+  if(targetCardId && targetCardId!==id){
+    const tgt=S.achievements.find(x=>x.id===targetCardId);
+    if(tgt){
+      if(src.axis===tgt.axis){ const tmp=src.order;src.order=tgt.order;tgt.order=tmp; }
+      else{
+        src.axis=tgt.axis; src.order=tgt.order-0.5;
+        S.achievements.filter(a=>a.axis===src.axis).sort((a,b)=>a.order-b.order).forEach((a,i)=>a.order=i);
+      }
+    }
+  } else if(src.axis!==axId){
+    src.axis=axId;
+    const mo=S.achievements.filter(a=>a.axis===axId&&a.id!==id).reduce((m,a)=>Math.max(m,a.order),-1);
+    src.order=mo+1;
+  }
+  commit();
+  if(wasPinned) toast('Убрано из фокуса');
+}
+
+function clearDropHL(){
+  document.querySelectorAll('.drag-hot,.drop-t,.drag-over').forEach(el=>
+    el.classList.remove('drag-hot','drop-t','drag-over'));
+  const emp=document.getElementById('focus-empty');
+  if(emp) emp.classList.remove('hot');
+}
+
+/* ── TOUCH DRAG ── */
+const td={active:false,el:null,clone:null,id:null,from:null,ox:0,oy:0,sx:0,sy:0};
+const ghost=document.getElementById('drag-ghost');
+
+document.addEventListener('touchstart',e=>{
+  if(e.target.closest('button')) return;
+  const card=e.target.closest('.ach-card');
+  const bkt=e.target.closest('.bkt-item');
+  const el=card||bkt; if(!el) return;
+  const t=e.touches[0], rect=el.getBoundingClientRect();
+  Object.assign(td,{el,id:el.dataset.id,from:card?el.dataset.from:'bucket',
+    ox:t.clientX-rect.left,oy:t.clientY-rect.top,sx:t.clientX,sy:t.clientY,active:false});
+},{passive:true});
+
+document.addEventListener('touchmove',e=>{
+  if(!td.el) return;
+  const t=e.touches[0];
+  const dx=t.clientX-td.sx, dy=t.clientY-td.sy;
+  if(!td.active){
+    if(Math.sqrt(dx*dx+dy*dy)<10) return;
+    td.active=true;
+    ghost.innerHTML=td.el.outerHTML;
+    ghost.style.cssText=`width:${td.el.offsetWidth}px;display:block;`;
+    td.el.classList.add('dragging');
+    document.body.style.overflow='hidden';
+  }
+  e.preventDefault();
+  ghost.style.left=(t.clientX-td.ox)+'px';
+  ghost.style.top=(t.clientY-td.oy)+'px';
+  // auto-scroll
+  if(t.clientY<80) window.scrollBy(0,-10);
+  else if(t.clientY>window.innerHeight-80) window.scrollBy(0,10);
+  // highlight
+  ghost.style.display='none';
+  const target=document.elementFromPoint(t.clientX,t.clientY);
+  ghost.style.display='block';
+  clearDropHL();
+  if(!target) return;
+  const fs=target.closest('#focus-sec');
+  const ac=target.closest('.axis-col');
+  if(fs&&td.from!=='focus'){ fs.classList.add('drag-hot'); const emp=document.getElementById('focus-empty'); if(emp)emp.classList.add('hot'); }
+  else if(ac) ac.classList.add('drop-t');
+},{passive:false});
+
+document.addEventListener('touchend',e=>{
+  document.body.style.overflow='';
+  if(!td.active||!td.el){td.el=null;return;}
+  ghost.style.display='none';
+  const t=e.changedTouches[0];
+  const target=document.elementFromPoint(t.clientX,t.clientY);
+  ghost.style.display='';
+  td.el.classList.remove('dragging');
+  clearDropHL();
+  if(target){
+    const fs=target.closest('#focus-sec');
+    const ac=target.closest('.axis-col');
+    const achC=target.closest('.ach-card');
+    const bktI=target.closest('.bkt-item');
+    if(td.from==='bucket'){
+      if(bktI&&bktI.dataset.id!==td.id){
+        const si=S.bucket.findIndex(b=>b.id===td.id);
+        const ti=S.bucket.findIndex(b=>b.id===bktI.dataset.id);
+        if(si!==-1&&ti!==-1){const[it]=S.bucket.splice(si,1);S.bucket.splice(ti,0,it);commit();}
+      }
+    } else {
+      if(fs&&td.from!=='focus') pinAch(td.id);
+      else if(ac) dropAchToAxis(td.id,ac.dataset.axis,achC&&achC.dataset.id!==td.id?achC.dataset.id:null);
+      else if(achC&&achC.dataset.id!==td.id&&achC.closest('#focus-grid')&&td.from!=='focus') pinAch(td.id);
+    }
+  }
+  ghost.style.display='none';
+  Object.assign(td,{active:false,el:null,id:null,from:null});
+},{passive:true});
+
+/* ── DESKTOP DRAG (HTML5) ── */
+let ddId=null,ddFrom=null;
+document.addEventListener('dragstart',e=>{
+  const card=e.target.closest('.ach-card');
+  const bkt=e.target.closest('.bkt-item');
+  if(card){ddId=card.dataset.id;ddFrom=card.dataset.from;card.classList.add('dragging');e.dataTransfer.effectAllowed='move';}
+  else if(bkt){ddId=bkt.dataset.id;ddFrom='bucket';bkt.classList.add('dragging');e.dataTransfer.effectAllowed='move';}
+});
+document.addEventListener('dragend',()=>{ document.querySelectorAll('.dragging').forEach(el=>el.classList.remove('dragging')); clearDropHL(); ddId=null;ddFrom=null; });
+
+// Focus zone
+const focusSec=document.getElementById('focus-sec');
+focusSec.addEventListener('dragover',e=>{e.preventDefault();focusSec.classList.add('drag-hot');});
+focusSec.addEventListener('dragleave',e=>{if(!focusSec.contains(e.relatedTarget))focusSec.classList.remove('drag-hot');});
+focusSec.addEventListener('drop',e=>{e.preventDefault();focusSec.classList.remove('drag-hot');if(ddId&&ddFrom!=='focus')pinAch(ddId);});
+
+// Axes
+const axesGrid=document.getElementById('axes-grid');
+axesGrid.addEventListener('dragover',e=>{e.preventDefault();const c=e.target.closest('.axis-col');if(c)c.classList.add('drop-t');});
+axesGrid.addEventListener('dragleave',e=>{const c=e.target.closest('.axis-col');if(c&&!c.contains(e.relatedTarget))c.classList.remove('drop-t');});
+axesGrid.addEventListener('drop',e=>{
+  e.preventDefault(); const c=e.target.closest('.axis-col'); if(!c||!ddId)return;
+  c.classList.remove('drop-t');
+  const tc=e.target.closest('.ach-card');
+  dropAchToAxis(ddId,c.dataset.axis,tc&&tc.dataset.id!==ddId?tc.dataset.id:null);
+});
+
+// Bucket
+const bktList=document.getElementById('bkt-list');
+bktList.addEventListener('dragover',e=>{e.preventDefault();const it=e.target.closest('.bkt-item');if(it&&ddId&&it.dataset.id!==ddId)it.classList.add('drag-over');});
+bktList.addEventListener('dragleave',e=>{const it=e.target.closest('.bkt-item');if(it)it.classList.remove('drag-over');});
+bktList.addEventListener('drop',e=>{
+  e.preventDefault(); if(ddFrom!=='bucket')return;
+  const it=e.target.closest('.bkt-item'); if(!it||it.dataset.id===ddId)return;
+  it.classList.remove('drag-over');
+  const si=S.bucket.findIndex(b=>b.id===ddId),ti=S.bucket.findIndex(b=>b.id===it.dataset.id);
+  if(si!==-1&&ti!==-1){const[item]=S.bucket.splice(si,1);S.bucket.splice(ti,0,item);commit();}
+});
+
+// Make cards draggable via MutationObserver
+new MutationObserver(()=>{
+  document.querySelectorAll('.ach-card:not([draggable])').forEach(el=>el.setAttribute('draggable','true'));
+  document.querySelectorAll('.bkt-item:not([draggable])').forEach(el=>el.setAttribute('draggable','true'));
+}).observe(document.getElementById('app'),{childList:true,subtree:true});
+
+/* ═══════════ OATH ═══════════ */
+function toggleOath(){oathOpen=!oathOpen;renderOath();}
+function openEditOath(){
+  document.getElementById('oath-fields').innerHTML=S.oath.map((r,i)=>
+    `<div class="mf"><label>Правило ${i+1}</label><textarea id="or-${i}" rows="3">${esc(r)}</textarea></div>`).join('');
+  openM('m-oath');
+}
+function saveOath(){
+  S.oath=S.oath.map((_,i)=>{const el=document.getElementById(`or-${i}`);return el?el.value.trim():S.oath[i];});
+  commit();closeM('m-oath');toast('Обет сохранён');
+}
+
+/* ═══════════ ACHIEVEMENT MODAL ═══════════ */
+function fillAxSel(sel){
+  document.getElementById('a-axis').innerHTML=S.axes.map(a=>`<option value="${a.id}" ${a.id===sel?'selected':''}>${a.name}</option>`).join('');
+}
+function openAddAch(pre={}){
+  editAchId=null;
+  document.getElementById('m-ach-t').textContent='Новое достижение';
+  document.getElementById('a-title').value=pre.title||'';
+  document.getElementById('a-desc').value=pre.desc||'';
+  document.getElementById('a-note').value='';
+  curDiff=pre.difficulty||1; fillAxSel(pre.axis||S.axes[0].id); updDiff();
+  document.getElementById('b-done').style.display='none';
+  document.getElementById('b-reac').style.display='none';
+  document.getElementById('b-delach').style.display='none';
+  document.getElementById('note-f').style.display='none';
+  openM('m-ach');
+}
+function openEditAch(id){
+  const a=S.achievements.find(x=>x.id===id);if(!a)return;
+  editAchId=id;
+  document.getElementById('m-ach-t').textContent='Редактировать';
+  document.getElementById('a-title').value=a.title;
+  document.getElementById('a-desc').value=a.description;
+  document.getElementById('a-note').value=a.note||'';
+  curDiff=a.difficulty; fillAxSel(a.axis); updDiff();
+  document.getElementById('note-f').style.display='block';
+  document.getElementById('b-delach').style.display='inline-flex';
+  document.getElementById('b-done').style.display=a.status==='active'?'inline-flex':'none';
+  document.getElementById('b-reac').style.display=a.status==='completed'?'inline-flex':'none';
+  openM('m-ach');
+}
+function setDiff(n){curDiff=n;updDiff();}
+function updDiff(){document.querySelectorAll('.diff-b').forEach(b=>b.classList.toggle('on',+b.dataset.d===curDiff));}
+
+function saveAch(){
+  const title=document.getElementById('a-title').value.trim();
+  if(!title){toast('Введи название');return;}
+  const axis=document.getElementById('a-axis').value;
+  const desc=document.getElementById('a-desc').value.trim();
+  const note=document.getElementById('a-note').value.trim();
+  if(editAchId){
+    const a=S.achievements.find(x=>x.id===editAchId);
+    if(a){a.title=title;a.description=desc;a.axis=axis;a.difficulty=curDiff;a.note=note;}
+    toast('Сохранено');
+  } else {
+    const mo=S.achievements.filter(x=>x.axis===axis).reduce((m,x)=>Math.max(m,x.order),-1);
+    S.achievements.push({id:uid(),title,description:desc,axis,difficulty:curDiff,status:'active',pinned:false,completedAt:null,note,order:mo+1});
+    toast('Достижение добавлено');
+  }
+  commit();closeM('m-ach');
+}
+function completeAch(){
+  if(!editAchId)return;
+  const a=S.achievements.find(x=>x.id===editAchId);if(!a)return;
+  a.note=document.getElementById('a-note').value.trim();
+  a.status='completed';a.completedAt=today();a.pinned=false;
+  commit();closeM('m-ach');toast(`✓ +${a.difficulty} XP → ${axName(a.axis)}`);
+}
+function reactivate(){
+  if(!editAchId)return;
+  const a=S.achievements.find(x=>x.id===editAchId);if(!a)return;
+  a.status='active';a.completedAt=null;commit();closeM('m-ach');toast('Возвращено в активные');
+}
+function deleteAch(){
+  if(!editAchId||!confirm('Удалить достижение?'))return;
+  S.achievements=S.achievements.filter(x=>x.id!==editAchId);
+  commit();closeM('m-ach');toast('Удалено');
+}
+function togglePin(id){
+  const a=S.achievements.find(x=>x.id===id);if(!a)return;
+  if(!a.pinned){
+    const cnt=S.achievements.filter(x=>x.pinned&&x.status==='active').length;
+    if(cnt>=5){toast('В фокусе уже 5 квестов');return;}
+  }
+  a.pinned=!a.pinned;commit();toast(a.pinned?'⚡ В фокус':'Убрано из фокуса');
+}
+
+/* ═══════════ COUNTERS ═══════════ */
+function openAddCounter(){
+  editCntId=null;
+  document.getElementById('m-cnt-t').textContent='Новый счётчик';
+  document.getElementById('c-name').value='';
+  document.getElementById('c-tiers').value='5, 15, 30';
+  document.getElementById('c-cur').value='0';
+  document.getElementById('c-cur-f').style.display='none';
+  document.getElementById('b-delcnt').style.display='none';
+  openM('m-cnt');
+}
+function openEditCnt(id){
+  const c=S.counters.find(x=>x.id===id);if(!c)return;
+  editCntId=id;
+  document.getElementById('m-cnt-t').textContent='Редактировать счётчик';
+  document.getElementById('c-name').value=c.name;
+  document.getElementById('c-tiers').value=c.tiers.join(', ');
+  document.getElementById('c-cur').value=c.current;
+  document.getElementById('c-cur-f').style.display='block';
+  document.getElementById('b-delcnt').style.display='inline-flex';
+  openM('m-cnt');
+}
+function saveCnt(){
+  const name=document.getElementById('c-name').value.trim();
+  if(!name){toast('Введи название');return;}
+  const tiers=document.getElementById('c-tiers').value.split(',').map(t=>parseInt(t.trim())).filter(n=>!isNaN(n)&&n>0).sort((a,b)=>a-b);
+  if(!tiers.length){toast('Введи тиры');return;}
+  const cur=parseInt(document.getElementById('c-cur').value)||0;
+  if(editCntId){
+    const c=S.counters.find(x=>x.id===editCntId);
+    if(c){c.name=name;c.tiers=tiers;c.current=cur;}
+    toast('Обновлено');
+  } else {
+    S.counters.push({id:uid(),name,current:0,tiers});toast('Счётчик добавлен');
+  }
+  commit();closeM('m-cnt');
+}
+function deleteCnt(){
+  if(!editCntId||!confirm('Удалить счётчик?'))return;
+  S.counters=S.counters.filter(x=>x.id!==editCntId);commit();closeM('m-cnt');toast('Удалено');
+}
+function incCnt(id){
+  const c=S.counters.find(x=>x.id===id);if(!c)return;
+  c.current++;
+  const hit=c.tiers.find(t=>t===c.current);
+  commit();
+  if(hit) toast(`🏆 Тир ${hit}: ${c.name}`);
+}
+
+/* ═══════════ BUCKET ═══════════ */
+function openAddBucket(){document.getElementById('bkt-in').focus();}
+function addBucket(){
+  const inp=document.getElementById('bkt-in');
+  const text=inp.value.trim();if(!text)return;
+  S.bucket.push({id:uid(),text});inp.value='';commit();
+}
+function bktKey(e){if(e.key==='Enter')addBucket();}
+function delBucket(id){S.bucket=S.bucket.filter(b=>b.id!==id);commit();}
+function bktToAch(id){const b=S.bucket.find(x=>x.id===id);if(!b)return;openAddAch({title:b.text});}
+
+/* ═══════════ SEASON ═══════════ */
 function openNewSeason(){
   isNewSeason=true;
-  document.getElementById('m-season-title').textContent='Новый сезон';
+  document.getElementById('m-s-t').textContent='Новый сезон';
   document.getElementById('s-name').value='';
   document.getElementById('s-sub').value='';
   document.getElementById('s-warn').style.display='block';
-  document.getElementById('btn-save-s').textContent='Начать новый сезон';
+  document.getElementById('b-saves').textContent='Начать новый сезон';
   openM('m-season');
 }
 function openEditSeason(){
   isNewSeason=false;
-  document.getElementById('m-season-title').textContent='Редактировать сезон';
+  document.getElementById('m-s-t').textContent='Редактировать сезон';
   document.getElementById('s-name').value=S.season.name;
   document.getElementById('s-sub').value=S.season.subtitle;
   document.getElementById('s-warn').style.display='none';
-  document.getElementById('btn-save-s').textContent='Сохранить';
+  document.getElementById('b-saves').textContent='Сохранить';
   openM('m-season');
 }
 function saveSeason(){
   const name=document.getElementById('s-name').value.trim();
   const sub=document.getElementById('s-sub').value.trim();
   if(isNewSeason){
-    if(!name){ toast('Введи название сезона'); return; }
-    if(!confirm('Начать новый сезон? Текущий будет заархивирован.')) return;
+    if(!name){toast('Введи название сезона');return;}
+    if(!confirm('Начать новый сезон? Текущий будет заархивирован.'))return;
     archiveSeason();
-    S.season.name=name; S.season.subtitle=sub||''; S.season.startedAt=today();
-    S.achievements.forEach(a=>{ a.status='active'; a.completedAt=null; a.pinned=false; });
+    S.season.name=name;S.season.subtitle=sub||'';S.season.startedAt=today();
+    S.achievements.forEach(a=>{a.status='active';a.completedAt=null;a.pinned=false;});
     S.counters.forEach(c=>c.current=0);
     toast('Новый сезон начат!');
   } else {
-    if(name) S.season.name=name;
-    S.season.subtitle=sub;
-    toast('Сезон обновлён');
+    if(name)S.season.name=name;
+    S.season.subtitle=sub;toast('Сезон обновлён');
   }
-  commit(); closeM('m-season');
+  commit();closeM('m-season');
 }
 function archiveSeason(){
-  let arcs=[]; try{ arcs=JSON.parse(localStorage.getItem(ARC)||'[]'); }catch(e){}
+  let arcs=[];try{arcs=JSON.parse(localStorage.getItem(AKEY)||'[]');}catch(e){}
   arcs.push({archivedAt:today(),snapshot:JSON.parse(JSON.stringify(S))});
-  localStorage.setItem(ARC,JSON.stringify(arcs));
+  localStorage.setItem(AKEY,JSON.stringify(arcs));
 }
 
-/* ── EXPORT / IMPORT ── */
-function exportJSON(){
-  const d=Object.assign({_schema:'Quest Board v1. Keys: season, oath, axes, achievements, counters, bucket.'},S);
-  const blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download=`quest-board-${today()}.json`; a.click();
-  URL.revokeObjectURL(url); toast('Экспорт готов');
+/* ═══════════════════════════════════════════════════
+   GITHUB CONTENTS API
+   Сохраняет JSON файл прямо в репозиторий коммитом.
+   API: PUT /repos/{owner}/{repo}/contents/{path}
+   ═══════════════════════════════════════════════════ */
+function getGitCfg(){try{return JSON.parse(localStorage.getItem(GKEY)||'{}');}catch(e){return{};}}
+function saveGitCfgRaw(cfg){localStorage.setItem(GKEY,JSON.stringify(cfg));}
+
+// Encode UTF-8 string → base64 (handles Cyrillic)
+function toB64(str){ return btoa(unescape(encodeURIComponent(str))); }
+// Decode base64 → UTF-8 string
+function fromB64(b64){ return decodeURIComponent(escape(atob(b64.replace(/\n/g,'')))); }
+
+async function ghRequest(method,url,token,body){
+  const res=await fetch(url,{
+    method,
+    headers:{Authorization:`token ${token}`,'Content-Type':'application/json',Accept:'application/vnd.github.v3+json'},
+    ...(body?{body:JSON.stringify(body)}:{})
+  });
+  const data=await res.json().catch(()=>({}));
+  if(!res.ok) throw new Error(data.message||res.statusText);
+  return data;
 }
-function importClick(){ document.getElementById('import-input').click(); }
-function importJSON(e){
-  const file=e.target.files[0]; if(!file) return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
+
+async function gitPush(){
+  const cfg=getGitCfg();
+  if(!cfg.token||!cfg.owner||!cfg.repo){
+    toast('Настрой репозиторий → ⚙ Git');openGitSettings();return;
+  }
+  const path=cfg.path||'quest-board-data.json';
+  const url=`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path}`;
+  setSbarStatus('busy','Сохраняю...');
+  try{
+    // Get current SHA (needed for update; null if file doesn't exist yet)
+    let sha=null;
     try{
-      const data=JSON.parse(ev.target.result);
-      if(!confirm('Импорт заменит текущие данные. Продолжить?')) return;
-      S=migrate(data); commit(); toast('Импорт выполнен');
-    }catch(err){ toast('Ошибка: неверный JSON'); }
-  };
-  reader.readAsText(file); e.target.value='';
+      const existing=await ghRequest('GET',url,cfg.token);
+      sha=existing.sha;
+    }catch(e){ /* file doesn't exist yet — that's fine */ }
+
+    const content=toB64(JSON.stringify(S,null,2));
+    const now=new Date().toLocaleString('ru',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    const commitBody={
+      message:`Quest Board обновлён — ${now}`,
+      content,
+      ...(sha?{sha}:{})
+    };
+    await ghRequest('PUT',url,cfg.token,commitBody);
+    cfg.lastPush=new Date().toISOString();
+    saveGitCfgRaw(cfg);
+    setSbarStatus('ok',`Сохранено ${fmtTime(cfg.lastPush)}`);
+    toast('✓ Сохранено в репозиторий');
+  }catch(err){
+    setSbarStatus('err','Ошибка сохранения');
+    toast('Ошибка: '+err.message,4000);
+  }
+}
+
+async function gitPull(){
+  const cfg=getGitCfg();
+  if(!cfg.token||!cfg.owner||!cfg.repo){
+    toast('Настрой репозиторий → ⚙ Git');openGitSettings();return;
+  }
+  const path=cfg.path||'quest-board-data.json';
+  const url=`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path}`;
+  setSbarStatus('busy','Загружаю...');
+  try{
+    const data=await ghRequest('GET',url,cfg.token);
+    if(!data.content) throw new Error('Файл пуст или недоступен');
+    const parsed=JSON.parse(fromB64(data.content));
+    if(!confirm('Загрузить данные из репозитория? Локальные изменения будут перезаписаны.'))
+    { renderSbar();return; }
+    S=migrate(parsed);
+    cfg.lastPull=new Date().toISOString();
+    saveGitCfgRaw(cfg);
+    commit();
+    setSbarStatus('ok',`Загружено ${fmtTime(cfg.lastPull)}`);
+    toast('✓ Данные загружены из репозитория');
+  }catch(err){
+    setSbarStatus('err','Ошибка загрузки');
+    toast('Ошибка: '+err.message,4000);
+  }
+}
+
+function fmtTime(iso){
+  if(!iso)return'';
+  const d=new Date(iso);
+  return d.toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});
+}
+
+function setSbarStatus(cls,text){
+  const el=document.getElementById('sbar-status');
+  el.className='sbar-status '+cls;
+  el.textContent=text;
+}
+
+function renderSbar(){
+  const cfg=getGitCfg();
+  if(!cfg.token||!cfg.owner||!cfg.repo){
+    setSbarStatus('','Git не настроен');return;
+  }
+  const last=cfg.lastPush||cfg.lastPull;
+  if(last) setSbarStatus('ok',`${cfg.owner}/${cfg.repo} · ${fmtTime(last)}`);
+  else setSbarStatus('','Настроен, не синхронизировано');
+}
+
+function openGitSettings(){
+  const cfg=getGitCfg();
+  document.getElementById('g-token').value=cfg.token||'';
+  document.getElementById('g-owner').value=cfg.owner||'';
+  document.getElementById('g-repo').value=cfg.repo||'';
+  document.getElementById('g-path').value=cfg.path||'';
+  const linkEl=document.getElementById('g-repolink');
+  const linkA=document.getElementById('g-link');
+  if(cfg.owner&&cfg.repo){
+    linkEl.style.display='block';
+    const repoUrl=`https://github.com/${cfg.owner}/${cfg.repo}`;
+    linkA.href=repoUrl;
+    linkA.textContent=repoUrl;
+  } else {
+    linkEl.style.display='none';
+  }
+  openM('m-git');
+}
+
+function saveGitConfig(){
+  const token=document.getElementById('g-token').value.trim();
+  const owner=document.getElementById('g-owner').value.trim();
+  const repo=document.getElementById('g-repo').value.trim();
+  const path=document.getElementById('g-path').value.trim()||'quest-board-data.json';
+  if(!token||!owner||!repo){toast('Заполни все поля');return;}
+  saveGitCfgRaw({token,owner,repo,path});
+  renderSbar();
+  closeM('m-git');
+  toast('Настройки сохранены');
+}
+
+function clearGit(){
+  if(!confirm('Сбросить настройки репозитория?'))return;
+  localStorage.removeItem(GKEY);
+  renderSbar();
+  closeM('m-git');
+  toast('Сброшено');
+}
+
+/* ═══════════ EXPORT / IMPORT ═══════════ */
+function exportJSON(){
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`quest-board-${today()}.json`;a.click();
+  URL.revokeObjectURL(url);toast('Экспорт готов');
+}
+function importClick(){document.getElementById('import-input').click();}
+function importJSON(e){
+  const file=e.target.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=ev=>{try{
+    const data=JSON.parse(ev.target.result);
+    if(!confirm('Импорт заменит текущие данные. Продолжить?'))return;
+    S=migrate(data);commit();toast('Импорт выполнен');
+  }catch(err){toast('Ошибка: неверный JSON');}};
+  r.readAsText(file);e.target.value='';
 }
 
 function migrate(d){
@@ -1180,7 +1272,7 @@ function migrate(d){
   d.achievements=(d.achievements||[]).map(a=>({
     id:a.id||uid(),title:a.title||'',description:a.description||'',
     axis:a.axis||'craft',difficulty:a.difficulty||1,
-    status:a.status||'active',pinned:a.pinned||false,
+    status:a.status||'active',pinned:!!a.pinned,
     completedAt:a.completedAt||null,note:a.note||'',order:a.order||0
   }));
   d.counters=(d.counters||[]).map(c=>({id:c.id||uid(),name:c.name||'',current:c.current||0,tiers:c.tiers||[5,15,30]}));
@@ -1188,53 +1280,48 @@ function migrate(d){
   return d;
 }
 
-/* ── MODAL ── */
-function openM(id){ document.getElementById(id).classList.add('o'); }
-function closeM(id){ document.getElementById(id).classList.remove('o'); }
-function closeWelcome(){ document.getElementById('welcome').classList.remove('o'); }
+/* ═══════════ MODAL / UI ═══════════ */
+function openM(id){document.getElementById(id).classList.add('o');}
+function closeM(id){document.getElementById(id).classList.remove('o');}
+function closeWelcome(){document.getElementById('welcome').classList.remove('o');}
 
-/* ── KEYBOARD ── */
+document.getElementById('sn').addEventListener('click',()=>openEditSeason());
+
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){ document.querySelectorAll('.modal-back.o').forEach(m=>m.classList.remove('o')); return; }
-  const active=document.activeElement;
-  const editable=active&&(active.isContentEditable||active.tagName==='INPUT'||active.tagName==='TEXTAREA'||active.tagName==='SELECT');
-  if(editable) return;
-  if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&e.key==='z'){ e.preventDefault(); undo(); }
-  if((e.ctrlKey||e.metaKey)&&(e.key==='y'||(e.shiftKey&&e.key==='z'))){ e.preventDefault(); redo(); }
+  if(e.key==='Escape'){document.querySelectorAll('.mb.o').forEach(m=>m.classList.remove('o'));return;}
+  const ae=document.activeElement;
+  const edit=ae&&(ae.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(ae.tagName));
+  if(edit)return;
+  if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&e.key==='z'){e.preventDefault();undo();}
+  if((e.ctrlKey||e.metaKey)&&(e.key==='y'||(e.shiftKey&&e.key==='z'))){e.preventDefault();redo();}
 });
 
-/* ── SEASON NAME CLICK ── */
-document.getElementById('season-name').addEventListener('click',()=>openEditSeason());
-
-/* ── INIT ── */
+/* ═══════════ INIT ═══════════ */
 function init(){
   try{
-    const raw=localStorage.getItem(KEY);
-    if(raw){ S=migrate(JSON.parse(raw)); document.getElementById('welcome').classList.remove('o'); }
-    else{ S=JSON.parse(JSON.stringify(SEED)); save(); }
-  }catch(e){ S=JSON.parse(JSON.stringify(SEED)); save(); }
-  // Bootstrap history with initial state
-  history=[JSON.stringify(S)]; histIdx=0; updateUD();
+    const raw=localStorage.getItem(LKEY);
+    if(raw){S=migrate(JSON.parse(raw));document.getElementById('welcome').classList.remove('o');}
+    else{S=JSON.parse(JSON.stringify(SEED));save();}
+  }catch(e){S=JSON.parse(JSON.stringify(SEED));save();}
+  hist=[JSON.stringify(S)];hidx=0;updUD();
   render();
+  renderSbar();
 }
 
-return {
-  init, undo, redo,
-  toggleOath, openEditOath, saveOath,
-  openAddAch, openEditAch, setDiff, saveAch, completeAch, reactivateAch, deleteAch, togglePin,
-  achDragStart, achDragOver, achDragLeave, achDrop, achDragEnd,
-  axisDragOver, axisDragLeave, axisDrop,
-  focusDragOver, focusDragLeave, focusDrop,
-  openAddCounter, openEditCnt, saveCnt, deleteCnt, incCnt,
-  addBucket, bktKeydown, delBucket, bktToAch, openAddBucket,
-  bktDragStart, bktDragOver, bktDragLeave, bktDrop, bktDragEnd,
-  openNewSeason, openEditSeason, saveSeason,
-  exportJSON, importClick, importJSON,
-  openM, closeM, closeWelcome
-};
-
+/* ─── uid (function declaration → hoisted, available for SEED) ─── */
 function uid(){ return Math.random().toString(36).slice(2)+Date.now().toString(36); }
 
+return {
+  init,undo,redo,
+  toggleOath,openEditOath,saveOath,
+  openAddAch,openEditAch,setDiff,saveAch,completeAch,reactivate,deleteAch,togglePin,
+  openAddCounter,openEditCnt,saveCnt,deleteCnt,incCnt,
+  addBucket,bktKey,delBucket,bktToAch,openAddBucket,
+  openNewSeason,openEditSeason,saveSeason,
+  gitPush,gitPull,openGitSettings,saveGitConfig,clearGit,
+  exportJSON,importClick,importJSON,
+  openM,closeM,closeWelcome
+};
 })();
 
 QB.init();
